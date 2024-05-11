@@ -20,6 +20,7 @@ public:
     void setRole(string& role);
     void setName(string& name);
     void setLastname(string& lastname);
+    void setShift(int shift);
 
     int getId();
     string getUsername();
@@ -27,6 +28,8 @@ public:
     string getRole();
     string getName();
     string getLastname();
+    int getShift();
+    string encrypt(string text);
 
 private:
     int _id;
@@ -35,5 +38,6 @@ private:
     string _role;
     string _name;
     string _lastname;
-    //auto date_joined; //auto identifica solito el tipo de dato que recibir· la variable
+    int _shift;
+    //auto date_joined; //auto identifica solito el tipo de dato que recibir√° la variable
 };
