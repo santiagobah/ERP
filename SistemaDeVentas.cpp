@@ -17,23 +17,23 @@ SistemaDeVentas::~SistemaDeVentas()
 
 void SistemaDeVentas::MenuInicial()
 {
-	// Limpia la pantalla antes de mostrar el menú
+	// Limpia la pantalla antes de mostrar el menÃº
 	LimpiarPantalla();
-	// Variable para almacenar la opción seleccionada por el usuario
+	// Variable para almacenar la opciÃ³n seleccionada por el usuario
 	int opcionMI = 0;
 	// Bucle que se ejecuta hasta que el usuario elige salir del juego
 	while (opcionMI != 2) {
-		// Muestra las opciones del menú y solicita la entrada del usuario
+		// Muestra las opciones del menÃº y solicita la entrada del usuario
 		cout << "Menu de Inicio: " << endl
 			<< "1. Iniciar Sesion" << endl
 			<< "2. Salir del Sistema" << endl
 			<< "Opcion: ";
 		cin >> opcionMI;
-		// Realiza acciones basadas en la opción seleccionada por el usuario
+		// Realiza acciones basadas en la opciÃ³n seleccionada por el usuario
 		switch (opcionMI)
 		{
 		case 1:
-			// Llama al método MenuPrincipal() para mostrar el menú principal del juego
+			// Llama al mÃ©todo MenuPrincipal() para mostrar el menÃº principal del juego
 			IniciarSesion();
 			break;
 		case 2:
@@ -43,29 +43,29 @@ void SistemaDeVentas::MenuInicial()
 			PausaConEnter();
 			break;
 		default:
-			// En caso de que el usuario seleccione una opción no válida, muestra un mensaje de error 
+			// En caso de que el usuario seleccione una opciÃ³n no vÃ¡lida, muestra un mensaje de error 
 			// y espera a que el usuario presione Enter
 			LimpiarPantalla();
 			cout << "Selecciona una de las opciones validas" << endl;
 			PausaConEnter();
 			break;
 		}
-		// Limpia la pantalla antes de mostrar el menú nuevamente
+		// Limpia la pantalla antes de mostrar el menÃº nuevamente
 		LimpiarPantalla();	
 	}
 }
 
 void SistemaDeVentas::IniciarSesion()
 {
-	// Limpia la pantalla antes de mostrar el menú
+	// Limpia la pantalla antes de mostrar el menÃº
 	LimpiarPantalla();
 	ifstream archivoLeido(rutaUsuarios.c_str());
 	if (!archivoLeido) {
 		ofstream archivo;
 		archivo.open(rutaUsuarios.c_str(), fstream::out);
-		archivo << "1,admin,admin,admin,admin,admin";
+		archivo << "1,admin,admin,admin,admin,admin,1";
 		archivo.close();
-		Usuarios auxUsuario = Usuarios("admin", "admin", "admin", "admin", "admin", 1);
+		Usuarios auxUsuario = Usuarios("admin", "admin", "admin", "admin", "admin", 1, 1);
 		usuarios.push_back(auxUsuario);
 	}
 	else
@@ -74,7 +74,7 @@ void SistemaDeVentas::IniciarSesion()
 		while (getline(archivoLeido, linea))
 		{
 			string username, password, role, name, lastname;
-			int id;
+			int id, shift;
 			vector<string> CargAtrib;
 			for (int i = 0; i < linea.size(); i++)
 			{
@@ -95,7 +95,8 @@ void SistemaDeVentas::IniciarSesion()
 			username = CargAtrib[3];
 			password = CargAtrib[4];
 			role = CargAtrib[5];
-			Usuarios auxUsuario = Usuarios(name, lastname, username, password, role, id);
+			shift = stoi(CargAtrib[6]);
+			Usuarios auxUsuario = Usuarios(name, lastname, username, password, role, id, shift);
 			usuarios.push_back(auxUsuario);
 		}
 		archivoLeido.close();
@@ -106,11 +107,11 @@ void SistemaDeVentas::IniciarSesion()
 		string username, password;
 		cout << "Ingrese su nombre de usuario: ";
 		cin >> username;
-		cout << "Ingrese su contrase–a: ";
+		cout << "Ingrese su contraseâ€“a: ";
 		cin >> password;
 		for (int i = 0; i < usuarios.size(); i++)
 		{
-			if (username == usuarios[i].getUsername() && password == usuarios[i].getPassword())
+			if (username == usuarios[i].getUsername() && usuarios[i].encrypt(password) == usuarios[i].getPassword())
 			{
 				bandera = true;
 			}
@@ -126,7 +127,7 @@ void SistemaDeVentas::IniciarSesion()
 			{
 				exit(1);
 			}
-			cout << "Usuario o contrase–a incorrectos" << endl;
+			cout << "Usuario o contraseâ€“a incorrectos" << endl;
 			PausaConEnter();
 			contador++;
 		}
@@ -135,13 +136,13 @@ void SistemaDeVentas::IniciarSesion()
 
 void SistemaDeVentas::MenuPrincipal()
 {
-	// Limpia la pantalla antes de mostrar el menú
+	// Limpia la pantalla antes de mostrar el menÃº
 	LimpiarPantalla();
-	// Variable para almacenar la opción seleccionada por el usuario
+	// Variable para almacenar la opciÃ³n seleccionada por el usuario
 	int opcionMP = 0;
 	// Bucle que se ejecuta hasta que el usuario elige salir del juego
 	while (opcionMP != 6) {
-	// Muestra las opciones del menú y solicita la entrada del usuario
+	// Muestra las opciones del menÃº y solicita la entrada del usuario
 		cout << "Menu Principal: " << endl
 			<< "1. Realizar Venta" << endl
 			<< "2. Consultar Ventas" << endl
@@ -151,27 +152,27 @@ void SistemaDeVentas::MenuPrincipal()
 			<< "6. Salir" << endl
 			<< "Opcion: ";
 		cin >> opcionMP;
-		// Realiza acciones basadas en la opción seleccionada por el usuario
+		// Realiza acciones basadas en la opciÃ³n seleccionada por el usuario
 		switch (opcionMP)
 		{
 		case 1:
-			// Llama al método RealizarVenta() para mostrar el menú de venta
+			// Llama al mÃ©todo RealizarVenta() para mostrar el menÃº de venta
 			//RealizarVenta();
 			break;
 		case 2:
-			// Llama al método ConsultarVentas() para mostrar el menú de consulta de ventas
+			// Llama al mÃ©todo ConsultarVentas() para mostrar el menÃº de consulta de ventas
 			//ConsultarVentas();
 			break;
 		case 3:
-			// Llama al método ConsultarProductos() para mostrar el menú de consulta de productos
+			// Llama al mÃ©todo ConsultarProductos() para mostrar el menÃº de consulta de productos
 			//ConsultarProductos();
 			break;
 		case 4:
-			// Llama al método ConsultarClientes() para mostrar el menú de consulta de clientes
+			// Llama al mÃ©todo ConsultarClientes() para mostrar el menÃº de consulta de clientes
 			//ConsultarClientes();
 			break;
 		case 5:
-			// Llama al método ConsultarRegimenesFiscales() para mostrar el menú de consulta de regimenes fiscales
+			// Llama al mÃ©todo ConsultarRegimenesFiscales() para mostrar el menÃº de consulta de regimenes fiscales
 			//ConsultarRegimenesFiscales();
 			break;
 		case 6:
@@ -181,21 +182,21 @@ void SistemaDeVentas::MenuPrincipal()
 			PausaConEnter();
 			break;
 		default:
-			// En caso de que el usuario seleccione una opción no válida, muestra un mensaje de error 
+			// En caso de que el usuario seleccione una opciÃ³n no vÃ¡lida, muestra un mensaje de error 
 			// y espera a que el usuario presione Enter
 			LimpiarPantalla();
 			cout << "Selecciona una de las opciones validas" << endl;
 			PausaConEnter();
 			break;
 		}
-		// Limpia la pantalla antes de mostrar el menú nuevamente
+		// Limpia la pantalla antes de mostrar el menÃº nuevamente
 		LimpiarPantalla();
 	}
 }
 
 void SistemaDeVentas::PausaConEnter()
 {
-	// Pausa la ejecución del programa hasta que el usuario presiona Enter
+	// Pausa la ejecuciÃ³n del programa hasta que el usuario presiona Enter
 	cin.ignore();
 	cin.get();
 }
