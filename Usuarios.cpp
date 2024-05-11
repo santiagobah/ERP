@@ -1,6 +1,6 @@
 #include "Usuarios.h"
 
-Usuarios::Usuarios(string name, string surname, string username, string password, string role, int id)
+Usuarios::Usuarios(string name, string surname, string username, string password, string role, int id, int shift)
 {
     _id = id;
     _password = password;
@@ -9,6 +9,7 @@ Usuarios::Usuarios(string name, string surname, string username, string password
     _lastname = surname;
     //date_joined = chrono::system_clock::now();
     _username = username;
+    _shift = shift;
 }
 
 Usuarios::~Usuarios()
@@ -34,6 +35,11 @@ void Usuarios::setLastname(string& lastname_s) {
     _lastname = lastname_s;
 }
 
+void Usuarios::setShift(int shift)
+{
+    _shift = shift;
+}
+
 int Usuarios::getId() {
     return _id;
 }
@@ -51,6 +57,31 @@ string Usuarios::getName() {
 }
 string Usuarios::getLastname() {
     return _lastname;
+}
+
+int Usuarios::getShift()
+{
+    return _shift;
+}
+
+string Usuarios::encrypt(string text)
+{
+    int shift = _shift;
+    string encryptedText;
+    char ch;
+    for (int i = 0; i < text.length(); i++) {
+        ch = text[i];
+        if (isalpha(ch)) {
+            // Convert character to uppercase for easier handling
+            ch = toupper(ch);
+            // Get the new index by shifting and handling wrap-around
+            int newIndex = (ch - 'A' + shift % 26) % 26;
+            // Convert back to lowercase if original was lowercase
+            ch = (islower(text[i])) ? (newIndex + 'a') : (newIndex + 'A');
+        }
+        encryptedText += ch;
+    }
+    return encryptedText;
 }
 
 void Usuarios::add_user() {
@@ -71,7 +102,7 @@ void Usuarios::add_user() {
 void Usuarios::gen_id(string name, string surname) {
     for (int i = 0; i < 3; i++) {
         cout << name[i] << surname[i];
-        //Idea para crear el ID, aún faaltaría checar que en la base de datos no haya un ID idéntico
-        //Si hay otro id igual se movería a la tercera letra y así hasta que cree uno nuevo (podemos usar recursividad)
+        //Idea para crear el ID, aÃºn faaltarÃ­a checar que en la base de datos no haya un ID idÃ©ntico
+        //Si hay otro id igual se moverÃ­a a la tercera letra y asÃ­ hasta que cree uno nuevo (podemos usar recursividad)
     }
 }
