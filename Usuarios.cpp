@@ -1,15 +1,17 @@
 #include "Usuarios.h"
+#include <string>
 
-Usuarios::Usuarios(string name, string surname, string username, string password, string role, int id, int shift)
+using namespace std;
+
+Usuarios::Usuarios(string name, string surname, string username, string password, string role, int id, time_t date_joined)
 {
     _id = id;
     _password = password;
     _role = role;
     _name = name;
     _lastname = surname;
-    //date_joined = chrono::system_clock::now();
+    _date_joined = date_joined;
     _username = username;
-    _shift = shift;
 }
 
 Usuarios::~Usuarios()
@@ -19,25 +21,25 @@ Usuarios::~Usuarios()
 void Usuarios::setId(int id_s) {
     _id = id_s;
 }
-void Usuarios::setUsername(string& username_s) {
+void Usuarios::setUsername(string username_s) {
     _username = username_s;
 }
-void Usuarios::setPassword(string& password_s) {
+void Usuarios::setPassword(string password_s) {
     _password = password_s;
 }
-void Usuarios::setRole(string& role_s) {
+void Usuarios::setRole(string role_s) {
     _role = role_s;
 }
-void Usuarios::setName(string& name_s) {
+void Usuarios::setName(string name_s) {
     _name = name_s;
 }
-void Usuarios::setLastname(string& lastname_s) {
+void Usuarios::setLastname(string lastname_s) {
     _lastname = lastname_s;
 }
 
-void Usuarios::setShift(int shift)
+void Usuarios::setDateJoined(time_t date_joined)
 {
-    _shift = shift;
+    _date_joined = date_joined;
 }
 
 int Usuarios::getId() {
@@ -59,29 +61,19 @@ string Usuarios::getLastname() {
     return _lastname;
 }
 
-int Usuarios::getShift()
+time_t Usuarios::getDateJoined()
 {
-    return _shift;
+    return _date_joined;
 }
 
 string Usuarios::encrypt(string text)
 {
-    int shift = _shift;
-    string encryptedText;
-    char ch;
-    for (int i = 0; i < text.length(); i++) {
-        ch = text[i];
-        if (isalpha(ch)) {
-            // Convert character to uppercase for easier handling
-            ch = toupper(ch);
-            // Get the new index by shifting and handling wrap-around
-            int newIndex = (ch - 'A' + shift % 26) % 26;
-            // Convert back to lowercase if original was lowercase
-            ch = (islower(text[i])) ? (newIndex + 'a') : (newIndex + 'A');
-        }
-        encryptedText += ch;
+    unsigned int hash = 0;
+    for (int i = 0; i < text.length(); ++i) {
+        hash = hash * 37 + text[i];
     }
-    return encryptedText;
+    string final = "12345678";//to_String(hash); ***Error de conversión de tipo de dato***
+    return final;
 }
 
 void Usuarios::add_user() {

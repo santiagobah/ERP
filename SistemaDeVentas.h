@@ -2,8 +2,6 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
-#include <string>
-#include <chrono>
 #include <ctime>
 #include <stdlib.h>
 #include "Ventas.h"
@@ -24,6 +22,7 @@ public:
 
 	void MenuInicial();
 	void IniciarSesion();
+	void ValidacionDeCredenciales();
 	void MenuPrincipal();
 	void PausaConEnter();
 	void LimpiarPantalla();
@@ -44,4 +43,3 @@ private:
 	string rutaVentas;
 	string rutaProductosVendidos;
 };
-

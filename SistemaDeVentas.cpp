@@ -33,13 +33,11 @@ void SistemaDeVentas::MenuInicial()
 		switch (opcionMI)
 		{
 		case 1:
-			// Llama al mÃ©todo MenuPrincipal() para mostrar el menÃº principal del juego
+			// Llama al método MenuPrincipal() para mostrar el menú principal del Sistema
 			IniciarSesion();
 			break;
 		case 2:
 			LimpiarPantalla();
-			// Muestra un mensaje de despedida y termina el juego
-			cout << "Gracias por jugar" << endl;
 			PausaConEnter();
 			break;
 		default:
@@ -50,8 +48,8 @@ void SistemaDeVentas::MenuInicial()
 			PausaConEnter();
 			break;
 		}
-		// Limpia la pantalla antes de mostrar el menÃº nuevamente
-		LimpiarPantalla();	
+		// Limpia la pantalla antes de mostrar el menú nuevamente
+		LimpiarPantalla();
 	}
 }
 
@@ -63,9 +61,11 @@ void SistemaDeVentas::IniciarSesion()
 	if (!archivoLeido) {
 		ofstream archivo;
 		archivo.open(rutaUsuarios.c_str(), fstream::out);
-		archivo << "1,admin,admin,admin,admin,admin,1";
+		Usuarios auxUsuario = Usuarios("admin", "admin", "admin", "admin", "admin", 1, time(NULL));
+		archivo << "1,admin,admin,admin," << auxUsuario.encrypt("admin") << ",admin," << auxUsuario.getDateJoined();
 		archivo.close();
-		Usuarios auxUsuario = Usuarios("admin", "admin", "admin", "admin", "admin", 1, 1);
+		string password = auxUsuario.encrypt(auxUsuario.getPassword());
+		auxUsuario.setPassword(password);
 		usuarios.push_back(auxUsuario);
 	}
 	else
@@ -75,6 +75,7 @@ void SistemaDeVentas::IniciarSesion()
 		{
 			string username, password, role, name, lastname;
 			int id, shift;
+			time_t dateJoined;
 			vector<string> CargAtrib;
 			for (int i = 0; i < linea.size(); i++)
 			{
@@ -95,12 +96,17 @@ void SistemaDeVentas::IniciarSesion()
 			username = CargAtrib[3];
 			password = CargAtrib[4];
 			role = CargAtrib[5];
-			shift = stoi(CargAtrib[6]);
-			Usuarios auxUsuario = Usuarios(name, lastname, username, password, role, id, shift);
+			dateJoined = stoi(CargAtrib[6]);
+			Usuarios auxUsuario = Usuarios(name, lastname, username, password, role, id, dateJoined);
 			usuarios.push_back(auxUsuario);
 		}
 		archivoLeido.close();
 	}
+	ValidacionDeCredenciales();
+}
+
+void SistemaDeVentas::ValidacionDeCredenciales()
+{
 	int contador = 1;
 	bool bandera = false;
 	do {
@@ -119,7 +125,6 @@ void SistemaDeVentas::IniciarSesion()
 		if (bandera)
 		{
 			MenuPrincipal();
-			contador = 1;
 		}
 		else
 		{
@@ -142,7 +147,7 @@ void SistemaDeVentas::MenuPrincipal()
 	int opcionMP = 0;
 	// Bucle que se ejecuta hasta que el usuario elige salir del juego
 	while (opcionMP != 6) {
-	// Muestra las opciones del menÃº y solicita la entrada del usuario
+		// Muestra las opciones del menú y solicita la entrada del usuario
 		cout << "Menu Principal: " << endl
 			<< "1. Realizar Venta" << endl
 			<< "2. Consultar Ventas" << endl
