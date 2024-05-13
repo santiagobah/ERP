@@ -1,48 +1,42 @@
 #pragma once
 #include <iostream>
 #include <string>
+#include <vector>
 #include <fstream>
+#include "Presentacion.h"
+
 using namespace std;
 
 class Productos
 {
 public:
-	Productos(int id, string UPC, string name, int id_p, float price, float cost, bool has_iva, int stock);
+	Productos(int ID, int UPC, string Name, int ID_Presentation, float Price, float Cost, bool hasIVA, int stock);
 	~Productos();
-    
-    void Menu_Principal();
-    void Agregar_Productos();
-    void Editar_Productos();
-    void Ver_Productos();
-    void Eliminar_Productos();
-    void Decision_IVA();
 
-    
-    void set_id(int id);
-    void set_UPC(string UPC);
-    void set_name(string name);
-    void set_id_p(int id_p);
-    void set_price(float price);
-    void set_cost(float cost);
-    void set_h_iva(bool has_iva);
-    void set_stock(int stock);
-    
-    int get_id();
-    string get_UPC();
-    string get_name();
-    int get_id_p();
-    float get_price();
-    float get_cost();
-    int get_iva();
-    int get_stock();
-    
+	void setID(int ID);
+	int getID();
+	void setUPC(int UPC);
+	int getUPC();
+	void setName(string Name);
+	string getName();
+	void setID_Presentation(int ID_Presentation);
+	int getID_Presentation();
+	void setPrice(float Price);
+	float getPrice();
+	void setCost(float Cost);
+	float getCost();
+	void setHasIVA(bool hasIVA);
+	bool getHasIVA();
+	void setStock(int stock);
+	int getStock();
+
 private:
-    int _id;
-    string _UPC;
-    string _name;
-    int _id_presentation;
-    float _price;
-    float _cost;
-    bool _has_iva;
-    int _stock;
+	int _ID;
+	int _UPC;
+	string _Name;
+	int _ID_Presentation;
+	float _Price;
+	float _Cost;
+	bool _hasIVA;
+	int _stock;
 };
