@@ -1,42 +1,36 @@
 #pragma once
 #include <iostream>
 #include <string>
-#include <vector>
 #include <fstream>
-#include "Presentacion.h"
-
+#include <vector>
 using namespace std;
+
+
+struct product{
+    int id;
+    string UPC;
+    string name;
+    int id_presentation;
+    float price;
+    float cost;
+    bool has_iva;
+    int stock;
+};
 
 class Productos
 {
 public:
-	Productos(int ID, int UPC, string Name, int ID_Presentation, float Price, float Cost, bool hasIVA, int stock);
+	Productos();
 	~Productos();
-
-	void setID(int ID);
-	int getID();
-	void setUPC(int UPC);
-	int getUPC();
-	void setName(string Name);
-	string getName();
-	void setID_Presentation(int ID_Presentation);
-	int getID_Presentation();
-	void setPrice(float Price);
-	float getPrice();
-	void setCost(float Cost);
-	float getCost();
-	void setHasIVA(bool hasIVA);
-	bool getHasIVA();
-	void setStock(int stock);
-	int getStock();
+    
+    void Menu_Principal();
+    void Agregar_Productos();
+    void Editar_Productos();
+    void Ver_Productos();
+    void Eliminar_Productos();
+    void Decision_IVA();
+    void Assign_ID();
 
 private:
-	int _ID;
-	int _UPC;
-	string _Name;
-	int _ID_Presentation;
-	float _Price;
-	float _Cost;
-	bool _hasIVA;
-	int _stock;
+    vector <product> _productos;
 };
