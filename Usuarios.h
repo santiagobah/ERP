@@ -1,36 +1,43 @@
 #pragma once
 #include <iostream>
 #include <string>
-#include <chrono>
-#include <ctime>
+#include <vector>
+#include <fstream>
 
 using namespace std;
+
+struct DateTime
+{
+    int year;
+    int month;
+    int day;
+    int hour;
+    int minute;
+    int second;
+};
 
 class Usuarios
 {
 public:
-    Usuarios(string name, string surname, string username, string password, string role, int id, time_t date_joined);
-    ~Usuarios();
+	Usuarios(string name, string surname, string username, string password, string role, int id, DateTime date_joined);
+	~Usuarios();
 
-    void add_user();
-    void gen_id(string name, string surname);
+	void setId(int id);
+	int getId();
+	void setUsername(string username);
+	string getUsername();
+	void setPassword(string password);
+	string getPassword();
+	void setRole(string role);
+	string getRole();
+	void setName(string name);
+	string getName();
+	void setLastname(string lastname);
+	string getLastname();
+	void setDateJoined(DateTime date_joined);
+	DateTime getDateJoined();
 
-    void setId(int id);
-    void setUsername(string username);
-    void setPassword(string password);
-    void setRole(string role);
-    void setName(string name);
-    void setLastname(string lastname);
-    void setDateJoined(time_t date_joined);
-
-    int getId();
-    string getUsername();
-    string getPassword();
-    string getRole();
-    string getName();
-    string getLastname();
-    time_t getDateJoined();
-    string encrypt(string text);
+	string Encrypt(string password);
 
 private:
     int _id;
@@ -39,7 +46,6 @@ private:
     string _role;
     string _name;
     string _lastname;
-    int _shift;
-    //auto date_joined; //auto identifica solito el tipo de dato que recibir√° la variable
-    time_t _date_joined; //auto identifica solito el tipo de dato que recibir· la variable
+	DateTime _date_joined;
+
 };

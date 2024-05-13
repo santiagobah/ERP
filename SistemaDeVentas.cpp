@@ -3,12 +3,13 @@
 SistemaDeVentas::SistemaDeVentas()
 {
 	rutaUsuarios = "./Scr/Usuarios.csv";
-	rutaProductos = "./Scr/Productos.csv";
 	rutaClientes = "./Scr/Clientes.csv";
-	rutaPresentaciones = "./Scr/Presentaciones.csv";
-	rutaRegimenesFiscales = "./Scr/RegimenesFiscales.csv";
+	rutaProductos = "./Scr/Productos.csv";
 	rutaVentas = "./Scr/Ventas.csv";
 	rutaProductosVendidos = "./Scr/ProductosVendidos.csv";
+	rutaPresentaciones = "./Scr/Presentaciones.csv";
+	rutaRegimenesFiscales = "./Scr/RegimenesFiscales.csv";
+
 }
 
 SistemaDeVentas::~SistemaDeVentas()
@@ -17,90 +18,49 @@ SistemaDeVentas::~SistemaDeVentas()
 
 void SistemaDeVentas::MenuInicial()
 {
-	// Limpia la pantalla antes de mostrar el menú
-	LimpiarPantalla();
-	// Variable para almacenar la opción seleccionada por el usuario
-	int opcionMI = 0;
-	// Bucle que se ejecuta hasta que el usuario elige salir del juego
-	while (opcionMI != 2) {
-		// Muestra las opciones del menú y solicita la entrada del usuario
-		cout << "Menu de Inicio: " << endl
-			<< "1. Iniciar Sesion" << endl
-			<< "2. Salir del Sistema" << endl
-			<< "Opcion: ";
-		cin >> opcionMI;
-		// Realiza acciones basadas en la opción seleccionada por el usuario
-		switch (opcionMI)
-		{
-		case 1:
-			// Llama al m�todo MenuPrincipal() para mostrar el men� principal del Sistema
-			IniciarSesion();
-			break;
-		case 2:
-			LimpiarPantalla();
-			PausaConEnter();
-			break;
-		default:
-			// En caso de que el usuario seleccione una opción no válida, muestra un mensaje de error 
-			// y espera a que el usuario presione Enter
-			LimpiarPantalla();
-			cout << "Selecciona una de las opciones validas" << endl;
-			PausaConEnter();
-			break;
-		}
-		// Limpia la pantalla antes de mostrar el men� nuevamente
+	cout << "Bienvenido al sistema de ventas" << endl;
+	cout << "1. Iniciar sesion" << endl;
+	cout << "2. Salir" << endl;
+	int opcion;
+	cin >> opcion;
+	switch (opcion)
+	{
+	case 1:
+		IniciarSesion();
+		break;
+	case 2:
+		break;
+	default:
 		LimpiarPantalla();
+		cout << "Opcion no valida" << endl;
+		PausaConEnter();
+		break;
 	}
 }
 
 void SistemaDeVentas::IniciarSesion()
 {
-	// Limpia la pantalla antes de mostrar el menú
 	LimpiarPantalla();
 	ifstream archivoLeido(rutaUsuarios.c_str());
 	if (!archivoLeido) {
 		ofstream archivo;
 		archivo.open(rutaUsuarios.c_str(), fstream::out);
-		Usuarios auxUsuario = Usuarios("admin", "admin", "admin", "admin", "admin", 1, time(NULL));
-		archivo << "1,admin,admin,admin," << auxUsuario.encrypt("admin") << ",admin," << auxUsuario.getDateJoined();
+		DateTime dateJoined = ConvertirFechaADateTime();
+		Usuarios auxUsuario = Usuarios("admin", "admin", "admin", "admin", "admin", 1, dateJoined);
+		archivo << "1,admin,admin,admin," << auxUsuario.Encrypt("admin") << ",admin," 
+			<< dateJoined.year << "," << dateJoined.month << "," << dateJoined.day << "," << dateJoined.hour << "," 
+			<< dateJoined.minute << "," << dateJoined.second << endl;
 		archivo.close();
-		string password = auxUsuario.encrypt(auxUsuario.getPassword());
+		string password = auxUsuario.Encrypt(auxUsuario.getPassword());
 		auxUsuario.setPassword(password);
 		usuarios.push_back(auxUsuario);
+		archivoLeido.close();
 	}
 	else
 	{
-		string linea, dato;
-		while (getline(archivoLeido, linea))
-		{
-			string username, password, role, name, lastname;
-			int id, shift;
-			time_t dateJoined;
-			vector<string> CargAtrib;
-			for (int i = 0; i < linea.size(); i++)
-			{
-				if (linea[i] == ',')
-				{
-					CargAtrib.push_back(dato);
-					dato = "";
-				}
-				else
-				{
-					dato += linea[i];
-				}
-			}
-			CargAtrib.push_back(dato);
-			id = stoi(CargAtrib[0]);
-			name = CargAtrib[1];
-			lastname = CargAtrib[2];
-			username = CargAtrib[3];
-			password = CargAtrib[4];
-			role = CargAtrib[5];
-			dateJoined = stoi(CargAtrib[6]);
-			Usuarios auxUsuario = Usuarios(name, lastname, username, password, role, id, dateJoined);
-			usuarios.push_back(auxUsuario);
-		}
 		archivoLeido.close();
+		usuarios = LeerUsuarios();
+		
 	}
 	ValidacionDeCredenciales();
 }
@@ -117,7 +77,7 @@ void SistemaDeVentas::ValidacionDeCredenciales()
 		cin >> password;
 		for (int i = 0; i < usuarios.size(); i++)
 		{
-			if (username == usuarios[i].getUsername() && usuarios[i].encrypt(password) == usuarios[i].getPassword())
+			if (username == usuarios[i].getUsername() && usuarios[i].Encrypt(password) == usuarios[i].getPassword())
 			{
 				bandera = true;
 			}
@@ -139,75 +99,122 @@ void SistemaDeVentas::ValidacionDeCredenciales()
 	} while (bandera == false);
 }
 
+vector<Usuarios> SistemaDeVentas::LeerUsuarios() 
+{
+	vector<Usuarios> usuarios;
+	ifstream archivoLeido(rutaUsuarios.c_str());
+	string linea, dato;
+	while (getline(archivoLeido, linea))
+	{
+		string username, password, role, name, lastname;
+		int id, year, month, day, hour, minute, second;
+		time_t dateJoined;
+		vector<string> CargAtrib;
+		for (int i = 0; i < linea.size(); i++)
+		{
+			if (linea[i] == ',')
+			{
+				CargAtrib.push_back(dato);
+				dato = "";
+			}
+			else
+			{
+				dato += linea[i];
+			}
+		}
+		CargAtrib.push_back(dato);
+		id = stoi(CargAtrib[0]);
+		name = CargAtrib[1];
+		lastname = CargAtrib[2];
+		username = CargAtrib[3];
+		password = CargAtrib[4];
+		role = CargAtrib[5];
+		year = stoi(CargAtrib[6]);
+		month = stoi(CargAtrib[7]);
+		day = stoi(CargAtrib[8]);
+		hour = stoi(CargAtrib[9]);
+		minute = stoi(CargAtrib[10]);
+		second = stoi(CargAtrib[11]);
+		DateTime AuxDateJoined = { year, month, day, hour, minute, second };
+		Usuarios auxUsuario = Usuarios(name, lastname, username, password, role, id, AuxDateJoined);
+		usuarios.push_back(auxUsuario);
+	}
+	archivoLeido.close();
+	return usuarios;
+}
+
 void SistemaDeVentas::MenuPrincipal()
 {
-	// Limpia la pantalla antes de mostrar el menú
-	LimpiarPantalla();
-	// Variable para almacenar la opción seleccionada por el usuario
-	int opcionMP = 0;
-	// Bucle que se ejecuta hasta que el usuario elige salir del juego
-	while (opcionMP != 6) {
-		// Muestra las opciones del men� y solicita la entrada del usuario
-		cout << "Menu Principal: " << endl
-			<< "1. Realizar Venta" << endl
-			<< "2. Consultar Ventas" << endl
-			<< "3. Consultar Productos" << endl
-			<< "4. Consultar Clientes" << endl
-			<< "5. Consultar Regimenes Fiscales" << endl
-			<< "6. Salir" << endl
-			<< "Opcion: ";
-		cin >> opcionMP;
-		// Realiza acciones basadas en la opción seleccionada por el usuario
-		switch (opcionMP)
-		{
-		case 1:
-			// Llama al método RealizarVenta() para mostrar el menú de venta
-			//RealizarVenta();
-			break;
-		case 2:
-			// Llama al método ConsultarVentas() para mostrar el menú de consulta de ventas
-			//ConsultarVentas();
-			break;
-		case 3:
-			// Llama al método ConsultarProductos() para mostrar el menú de consulta de productos
-			//ConsultarProductos();
-			break;
-		case 4:
-			// Llama al método ConsultarClientes() para mostrar el menú de consulta de clientes
-			//ConsultarClientes();
-			break;
-		case 5:
-			// Llama al método ConsultarRegimenesFiscales() para mostrar el menú de consulta de regimenes fiscales
-			//ConsultarRegimenesFiscales();
-			break;
-		case 6:
-			LimpiarPantalla();
-			// Muestra un mensaje de despedida y termina el juego
-			cout << "Gracias por jugar" << endl;
-			PausaConEnter();
-			break;
-		default:
-			// En caso de que el usuario seleccione una opción no válida, muestra un mensaje de error 
-			// y espera a que el usuario presione Enter
-			LimpiarPantalla();
-			cout << "Selecciona una de las opciones validas" << endl;
-			PausaConEnter();
-			break;
-		}
-		// Limpia la pantalla antes de mostrar el menú nuevamente
+	cout << "Menu Principal" << endl;
+	cout << "1. Administrador" << endl;
+	cout << "2. Vendedor" << endl;
+	cout << "3. Recursos Humanos" << endl;
+	cout << "4. Almacen" << endl;
+	cout << "5. Salir" << endl;
+	int opcion;
+	cin >> opcion;
+	switch (opcion)
+	{
+	case 1:
+		//MenuAdministrador();
+		break;
+	case 2:
+		//MenuVendedor();
+		break;
+	case 3:
+		//MenuRH();
+		break;
+	case 4:
+		//MenuAlmacen();
+		break;
+	case 5:
+		break;
+	default:
 		LimpiarPantalla();
+		cout << "Opcion no valida" << endl;
+		PausaConEnter();
+		break;
 	}
+}
+
+DateTime SistemaDeVentas::ConvertirFechaADateTime() 
+{
+	DateTime dateAux;
+	time_t now = time(0);
+	tm localTime;
+	localtime_s(&localTime, &now);
+	dateAux.year = 1900 + localTime.tm_year;
+	dateAux.month = 1 + localTime.tm_mon;
+	dateAux.day = localTime.tm_mday;
+	dateAux.hour = localTime.tm_hour;
+	dateAux.minute = localTime.tm_min;
+	dateAux.second = localTime.tm_sec;
+	return dateAux;
+}
+
+DateTimeV SistemaDeVentas::ConvertirFechaADateTimeV() 
+{
+	DateTimeV dateAux;
+	time_t now = time(0);
+	tm localTime;
+	localtime_s(&localTime, &now);
+	dateAux.year = 1900 + localTime.tm_year;
+	dateAux.month = 1 + localTime.tm_mon;
+	dateAux.day = localTime.tm_mday;
+	dateAux.hour = localTime.tm_hour;
+	dateAux.minute = localTime.tm_min;
+	dateAux.second = localTime.tm_sec;
+	return dateAux;
 }
 
 void SistemaDeVentas::PausaConEnter()
 {
-	// Pausa la ejecución del programa hasta que el usuario presiona Enter
+	cout << "Presione enter para continuar...";
 	cin.ignore();
 	cin.get();
 }
 
 void SistemaDeVentas::LimpiarPantalla()
 {
-	// Limpia la pantalla de la consola
 	system("cls");
 }

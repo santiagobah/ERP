@@ -29,6 +29,7 @@ public:
     void Ver_Productos();
     void Eliminar_Productos();
     void Decision_IVA();
+    void Assign_ID();
 
 private:
     vector <product> _productos;

@@ -117,3 +117,24 @@ void Productos::Decision_IVA(){
         }
     }
 }
+void Productos::Assign_ID(){
+    ifstream archivo_lectura;
+    archivo_lectura.open("Productos.csv");
+    string linea;
+    while (getline(archivo_lectura, linea)) {
+        vector <string> id_pp;
+        string parte;
+        for (int i = 0; i < linea.size(); i++) {
+            if (linea[i] == ',') {
+                id_pp.push_back(parte);
+                parte = "";
+            }
+            else{
+                parte += linea[i];
+            }
+        }
+        for (int i = 0; i < id_pp.size(); i++) {
+            
+        }
+    }
+}
