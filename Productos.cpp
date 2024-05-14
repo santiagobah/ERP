@@ -1,7 +1,6 @@
 #include "Productos.h"
 
 Productos::Productos(int id_unique, string UPC, string name, int id_presentation, float price, float cost, bool has_iva, int stock){
-    
 }
 
 Productos::~Productos(){
@@ -55,3 +54,4 @@ void Productos::set_stock(int stock){
 int Productos::get_stock(){
     return _stock;
 }
+

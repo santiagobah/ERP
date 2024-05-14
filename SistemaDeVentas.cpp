@@ -12,8 +12,7 @@ SistemaDeVentas::SistemaDeVentas()
 
 }
 
-SistemaDeVentas::~SistemaDeVentas()
-{
+SistemaDeVentas::~SistemaDeVentas(){
 }
 
 void SistemaDeVentas::MenuInicial()
@@ -42,9 +41,9 @@ void SistemaDeVentas::IniciarSesion()
 {
 	LimpiarPantalla();
 	ifstream archivoLeido(rutaUsuarios.c_str());
-	if (!archivoLeido) {
-		ofstream archivo;
-		archivo.open(rutaUsuarios.c_str(), fstream::out);
+    if (!archivoLeido) {
+        ofstream archivo;
+        archivo.open(rutaUsuarios.c_str(), fstream::out);
 		DateTime dateJoined = ConvertirFechaADateTime();
 		Usuarios auxUsuario = Usuarios("admin", "admin", "admin", "admin", "admin", 1, dateJoined);
 		archivo << "1,admin,admin,admin," << auxUsuario.Encrypt("admin") << ",admin," 
@@ -217,4 +216,87 @@ void SistemaDeVentas::PausaConEnter()
 void SistemaDeVentas::LimpiarPantalla()
 {
 	system("cls");
+}
+
+void SistemaDeVentas::EditarProducto(){
+}
+void SistemaDeVentas::VerProductos(){
+}
+void SistemaDeVentas::EliminarProducto(){
+}
+void SistemaDeVentas::GestionDeProductos(){
+    cout << "\nBienvenido al menú de Productos" << endl;
+    int opc_men_pod = 0;
+    do {
+        cout <<
+        "1. Add Products" <<
+        "\n2. Edit Products" <<
+        "\n3. See Products" << //SEE?
+        "\n4. Delete Products" <<
+        "\n5. Return" <<
+        "\nOpción elegida: ";
+        cin >> opc_men_pod;
+        switch(opc_men_pod){
+            case 1:
+            {
+                SistemaDeVentas::AgregarProducto();
+                break;
+            }
+            case 2:
+            {
+                SistemaDeVentas::EditarProducto();
+                break;
+            }
+            case 3:
+            {
+                SistemaDeVentas::VerProductos();
+                break;
+            }
+            case 4:
+            {
+                SistemaDeVentas::EliminarProducto();
+                break;
+            }
+            case 5:
+            {
+                break;
+            }
+            default:
+            {
+                cout << "Seleccione una opción válida" << endl;
+                SistemaDeVentas::GestionDeProductos();
+                break;
+            }
+        }
+
+
+    } while (opc_men_pod != 5);
+}
+void SistemaDeVentas::AgregarProducto(){
+    //Hacer que ID vaya creciendo
+    ofstream archivo_productos (rutaProductos, ios::app);
+    int id = 1;
+    string upc, name;
+    int id_presentation = 1;
+    float price, cost;
+    bool has_iva;
+    int stock;
+    cout << "\nScan the barcode of the product: ";
+    cin >> upc; archivo_productos << upc;
+    cout << "Type name for the product: ";
+    cin >> name; archivo_productos << name;
+    cout << "\nThe unique ID for " << name << "is going to be: " << id << endl; archivo_productos << id;
+    cout << "The  ID for this " << name << "presentation is going to be: " << id_presentation << endl; archivo_productos << id_presentation;
+    cout << "\nType the price for " << name << ": ";
+    cin >> price; archivo_productos << price;
+    cout << "Type the cost for " << name << ": ";
+    cin >> cost; archivo_productos << cost;
+    //Implementar un switch para el IVA
+    cout << name << " has IVA? (1. YES/ 0.NO): ";
+    cin >> has_iva; archivo_productos << has_iva;
+    cout << "How many " << name << " are available right now? ";
+    cin >> stock; archivo_productos << stock;
+    Productos NuevoProducto(id, upc, name, id_presentation, price, cost, has_iva, stock);
+    productos.push_back(NuevoProducto);
+    archivo_productos.close();
 }
