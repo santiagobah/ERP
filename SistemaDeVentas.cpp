@@ -217,13 +217,6 @@ void SistemaDeVentas::LimpiarPantalla()
 {
 	system("cls");
 }
-
-void SistemaDeVentas::EditarProducto(){
-}
-void SistemaDeVentas::VerProductos(){
-}
-void SistemaDeVentas::EliminarProducto(){
-}
 void SistemaDeVentas::GestionDeProductos(){
     cout << "\nBienvenido al menú de Productos" << endl;
     int opc_men_pod = 0;
@@ -272,12 +265,16 @@ void SistemaDeVentas::GestionDeProductos(){
 
     } while (opc_men_pod != 5);
 }
-void SistemaDeVentas::AgregarProducto(){
+void SistemaDeVentas::AgregarProducto(){ //Crear excepciones por si aún no se crea el archivo de productos
     //Hacer que ID vaya creciendo
+    productos = SistemaDeVentas::leer_productos(); //Para que inicie el vector ya cargado con los productos que estén ya registrados
+    int id_u_actual; //Para hacer ID's consecutivos
+    int id_p_actual; //Para hacer ID's consecutivos
+    int cant_prod_reg = productos.size();
+    id_u_actual = productos[cant_prod_reg].get_id();
+    id_p_actual = productos[cant_prod_reg].get_id_presentation();
     ofstream archivo_productos (rutaProductos, ios::app);
-    int id = 1;
     string upc, name;
-    int id_presentation = 1;
     float price, cost;
     bool has_iva;
     int stock;
@@ -285,8 +282,8 @@ void SistemaDeVentas::AgregarProducto(){
     cin >> upc; archivo_productos << upc;
     cout << "Type name for the product: ";
     cin >> name; archivo_productos << name;
-    cout << "\nThe unique ID for " << name << "is going to be: " << id << endl; archivo_productos << id;
-    cout << "The  ID for this " << name << "presentation is going to be: " << id_presentation << endl; archivo_productos << id_presentation;
+    cout << "\nThe unique ID for " << name << "is going to be: " << id_u_actual++ << endl; archivo_productos << id_u_actual++;
+    cout << "The  ID for this " << name << "presentation is going to be: " << id_p_actual++ << endl; archivo_productos << id_p_actual++;
     cout << "\nType the price for " << name << ": ";
     cin >> price; archivo_productos << price;
     cout << "Type the cost for " << name << ": ";
@@ -296,7 +293,64 @@ void SistemaDeVentas::AgregarProducto(){
     cin >> has_iva; archivo_productos << has_iva;
     cout << "How many " << name << " are available right now? ";
     cin >> stock; archivo_productos << stock;
-    Productos NuevoProducto(id, upc, name, id_presentation, price, cost, has_iva, stock);
+    Productos NuevoProducto(id_u_actual, upc, name, id_p_actual, price, cost, has_iva, stock);
     productos.push_back(NuevoProducto);
     archivo_productos.close();
+}
+void SistemaDeVentas::EliminarProducto(){
+    productos = SistemaDeVentas::leer_productos();
+    string upc;
+    int band_prod = 0;
+    cout << "\nScan the barcode of the product which you want to delete: ";
+    cin >> upc;
+    for (int i = 0; i < productos.size(); i++) {
+        if (upc == productos[i].get_UPC()) {
+            cout << productos[i].get_name() << "eliminado exitosamente" << endl;
+            productos.erase(productos.begin() + i);
+            band_prod = 1;
+            break;
+        }
+    }
+    if (band_prod == 0) {
+        cout << "El artículo no fue encontrado" << endl;
+    }
+    ofstream archivo_productos(rutaProductos);
+    
+}
+
+vector<Productos> SistemaDeVentas::leer_productos(){
+    vector<Productos> productos;
+    ifstream lectura_archivo(rutaProductos.c_str());
+    string linea, parte;
+    while (getline(lectura_archivo, linea)) {
+        string upc, name;
+        int id_u, id_p, stock, has_iva;
+        float price, cost;
+        vector <string> carga_productos;
+        for (int i = 0; i < linea.size(); i++) {
+            if (linea[i] == ',') {
+                carga_productos.push_back(parte);
+                parte = "";
+            }
+            else{
+                parte += linea[i];
+            }
+        }
+        carga_productos.push_back(parte);
+        upc = carga_productos[0];
+        name = carga_productos[1];
+        id_u = stoi(carga_productos[2]);
+        id_p = stoi(carga_productos[3]);
+        stock = stoi(carga_productos[4]);
+        has_iva = stoi(carga_productos[5]);
+        price = stof(carga_productos[6]);
+        cost = stof(carga_productos[7]);
+        Productos guardado_productos = Productos(id_u, upc, name, id_p, price, cost, has_iva, stock);
+        productos.push_back(guardado_productos);
+    }
+    return productos;
+}
+void SistemaDeVentas::EditarProducto(){
+}
+void SistemaDeVentas::VerProductos(){
 }

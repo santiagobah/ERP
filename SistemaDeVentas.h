@@ -36,6 +36,7 @@ private:
     void VerProductos();
     void EliminarProducto();
     vector<Productos> productos;
+    vector<Productos> leer_productos();
     string rutaProductos;
     
     void MenuPrincipal();
