@@ -5,32 +5,37 @@
 #include <vector>
 using namespace std;
 
-
-struct product{
-    int id;
-    string UPC;
-    string name;
-    int id_presentation;
-    float price;
-    float cost;
-    bool has_iva;
-    int stock;
-};
-
 class Productos
 {
 public:
-	Productos();
+	Productos(int id_unique, string UPC, string name, int id_presentation, float price, float cost, bool has_iva, int stock);
 	~Productos();
     
-    void Menu_Principal();
-    void Agregar_Productos();
-    void Editar_Productos();
-    void Ver_Productos();
-    void Eliminar_Productos();
-    void Decision_IVA();
-    void Assign_ID();
-
+    void set_id(int id_unique);
+    void set_UPC(string UPC);
+    void set_name(string name);
+    void set_id_presentation(int id_presentation);
+    void set_price(float price);
+    void set_cost(float cost);
+    void set_has_iva(bool has_iva);
+    void set_stock(int stock);
+    
+    int get_id();
+    string get_UPC();
+    string get_name();
+    int get_id_presentation();
+    float get_price();
+    float get_cost();
+    bool get_has_iva();
+    int get_stock();
+    
 private:
-    vector <product> _productos;
+    int _id_unique;
+    string _UPC;
+    string _name;
+    int _id_presentation;
+    float _price;
+    float _cost;
+    bool _has_iva;
+    int _stock;
 };

@@ -182,7 +182,7 @@ DateTime SistemaDeVentas::ConvertirFechaADateTime()
 	DateTime dateAux;
 	time_t now = time(0);
 	tm localTime;
-	localtime_s(&localTime, &now);
+	//localtime_s(&localTime, &now);
 	dateAux.year = 1900 + localTime.tm_year;
 	dateAux.month = 1 + localTime.tm_mon;
 	dateAux.day = localTime.tm_mday;
@@ -197,7 +197,7 @@ DateTimeV SistemaDeVentas::ConvertirFechaADateTimeV()
 	DateTimeV dateAux;
 	time_t now = time(0);
 	tm localTime;
-	localtime_s(&localTime, &now);
+	//localtime_s(&localTime, &now);
 	dateAux.year = 1900 + localTime.tm_year;
 	dateAux.month = 1 + localTime.tm_mon;
 	dateAux.day = localTime.tm_mday;
