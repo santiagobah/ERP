@@ -144,6 +144,7 @@ vector<Usuarios> SistemaDeVentas::LeerUsuarios()
 
 void SistemaDeVentas::MenuPrincipal()
 {
+    GestionDeProductos();
 	cout << "Menu Principal" << endl;
 	cout << "1. Administrador" << endl;
 	cout << "2. Vendedor" << endl;
@@ -279,25 +280,25 @@ void SistemaDeVentas::AgregarProducto(){ //Crear excepciones por si aún no se c
     bool has_iva;
     int stock;
     cout << "\nScan the barcode of the product: ";
-    cin >> upc; archivo_productos << upc;
+    cin >> upc; archivo_productos << upc << ";";
     cout << "Type name for the product: ";
-    cin >> name; archivo_productos << name;
-    cout << "\nThe unique ID for " << name << "is going to be: " << id_u_actual++ << endl; archivo_productos << id_u_actual++;
-    cout << "The  ID for this " << name << "presentation is going to be: " << id_p_actual++ << endl; archivo_productos << id_p_actual++;
+    cin >> name; archivo_productos << name << ",";
+    cout << "\nThe unique ID for " << name << "is going to be: " << id_u_actual++ << endl; archivo_productos << id_u_actual++ << ",";
+    cout << "The  ID for this " << name << "presentation is going to be: " << id_p_actual++ << endl; archivo_productos << id_p_actual++ << ",";
     cout << "\nType the price for " << name << ": ";
-    cin >> price; archivo_productos << price;
+    cin >> price; archivo_productos << price << ",";
     cout << "Type the cost for " << name << ": ";
-    cin >> cost; archivo_productos << cost;
+    cin >> cost; archivo_productos << cost << ",";
     //Implementar un switch para el IVA
-    cout << name << " has IVA? (1. YES/ 0.NO): ";
-    cin >> has_iva; archivo_productos << has_iva;
+    cout << name << " has IVA? (1. YES/ 0.NO): "; //implementar método que sea un switch para 1.yes, 2.no
+    cin >> has_iva; archivo_productos << has_iva << ",";
     cout << "How many " << name << " are available right now? ";
-    cin >> stock; archivo_productos << stock;
+    cin >> stock; archivo_productos << stock << ",";
     Productos NuevoProducto(id_u_actual, upc, name, id_p_actual, price, cost, has_iva, stock);
     productos.push_back(NuevoProducto);
     archivo_productos.close();
 }
-void SistemaDeVentas::EliminarProducto(){
+void SistemaDeVentas::EliminarProducto(){ //crear confirmaciones de delete
     productos = SistemaDeVentas::leer_productos();
     string upc;
     int band_prod = 0;
@@ -350,7 +351,137 @@ vector<Productos> SistemaDeVentas::leer_productos(){
     }
     return productos;
 }
-void SistemaDeVentas::EditarProducto(){
+void SistemaDeVentas::EditarProducto(){ //crear confirmaciones de edit
+    cout << "Choose the product which you want to select: " << endl;
+    int prod_edit;
+    productos = SistemaDeVentas::leer_productos();
+    for (int i = 0; i < productos.size(); i++) {
+        cout << i+1 << ".- " << productos[i].get_name() << endl;
+    }
+    cout << "Product to edit: ";
+    cin >> prod_edit;
+    int var_edit;
+    cout << "You are now editing " << productos[prod_edit-1].get_name() << endl;
+    cout << "Choose the variable to edit: " << endl;
+    cout << "1. Name" << "\n2. Price" << "\n3.Cost" << "\n4. IVA" << "\n5. Stock"<< "\nOption: " << endl;
+    cin >> var_edit;
+    switch(var_edit)
+    {
+        case 1:
+        {
+            string new_name;
+            cout << "Type the new name: "; cin.ignore(); getline(cin, new_name);
+            productos[prod_edit-1].set_name(new_name);
+            break;
+        }
+        case 2:
+        {
+            float new_price;
+            cout << "Type the new price for " << productos[prod_edit-1].get_name() << ": "; cin >> new_price;
+            productos[prod_edit-1].set_price(new_price);
+            break;
+        }
+        case 3:
+        {
+            float new_cost;
+            cout << "Type the new cost for " << productos[prod_edit-1].get_name() << ": "; cin >> new_cost;
+            productos[prod_edit-1].set_cost(new_cost);
+            break;
+        }
+        case 4:
+        {
+            bool set_iva;
+            cout << "Type the new IVA option: "; cin >> set_iva;
+            productos[prod_edit-1].set_has_iva(set_iva);
+            break;
+        }
+        case 5:
+        {
+            int new_stock;
+            cout << "Type the new stock for " << productos[prod_edit-1].get_name() << ": "; cin >> new_stock;
+            productos[prod_edit-1].set_stock(new_stock);
+            break;
+        }
+    }
 }
 void SistemaDeVentas::VerProductos(){
+    productos = SistemaDeVentas::leer_productos();
+    vector <Productos> aux_ord_prod;
+    aux_ord_prod = productos;
+    int sort_filter;
+    cout << "1. Sort products" << "\n2. Filter products" << "\nOption: " << endl; cin >> sort_filter;
+    switch(sort_filter){
+        case 1:
+        {
+            int sort_opc;
+            cout << "\nSort by: " << "\n1. Stock" << "\n2. ID" << "\n3. Price: Low to High" << "\n4.Price: High to Low" << "\n5. Cost" << "\nOption: "; cin >> sort_opc;
+            switch(sort_opc){
+                case 1:
+                {
+                    //Ocuparemos un vector auxiliar en el que filtraremos y ese será el que se mostrará
+                    //***************************************************HECHO CON IA: (IDK IF IT WORKS)
+                    sort(aux_ord_prod.begin(), aux_ord_prod.end(), []( Productos &a,  Productos &b) {return a.get_stock() < b.get_stock();});
+                    //*************************************************************
+                    
+                    for (int i = 0; i < productos.size(); i++) {
+                        cout << i+1 << ".- " << aux_ord_prod[i].get_name() << ". Stock: " << aux_ord_prod[i].get_stock() << endl;
+                    }
+                    break;
+                }
+                case 2:
+                {
+                    //Ocuparemos un vector auxiliar en el que filtraremos y ese será el que se mostrará
+                    //***************************************************HECHO CON IA: (IDK IF IT WORKS)
+                    sort(aux_ord_prod.begin(), aux_ord_prod.end(), []( Productos &a,  Productos &b) {return a.get_id() < b.get_id();});
+                    //*************************************************************
+                    
+                    for (int i = 0; i < productos.size(); i++) {
+                        cout << i+1 << ".- " << aux_ord_prod[i].get_name() << ". ID: " << aux_ord_prod[i].get_id() << endl;
+                    }
+                    break;
+                }
+                case 3:
+                {   //Ocuparemos un vector auxiliar en el que filtraremos y ese será el que se mostrará
+                    //***************************************************HECHO CON IA: (IDK IF IT WORKS)
+                    sort(aux_ord_prod.begin(), aux_ord_prod.end(), []( Productos &a,  Productos &b) {return a.get_price() < b.get_price();});
+                    //*************************************************************
+                    
+                    for (int i = 0; i < productos.size(); i++) {
+                        cout << i+1 << ".- " << aux_ord_prod[i].get_name() << ". Price: " << aux_ord_prod[i].get_price() << endl;
+                    }
+                    break;
+                }
+                case 4:
+                {
+                    //Ocuparemos un vector auxiliar en el que filtraremos y ese será el que se mostrará
+                    //***************************************************HECHO CON IA: (IDK IF IT WORKS)
+                    sort(aux_ord_prod.begin(), aux_ord_prod.end(), []( Productos &a,  Productos &b) {return a.get_price() < b.get_price();});
+                    //*************************************************************
+                    int max_prod = productos.size();
+                    for (int i = max_prod; i < 0; i--) {
+                        cout << i+1 << ".- " << aux_ord_prod[max_prod].get_name() << ". Price: " << aux_ord_prod[i].get_price() << endl;
+                    }
+                    
+                    break;
+                }
+                case 5:
+                {
+                    //Ocuparemos un vector auxiliar en el que filtraremos y ese será el que se mostrará
+                        //***************************************************HECHO CON IA: (IDK IF IT WORKS)
+                        sort(aux_ord_prod.begin(), aux_ord_prod.end(), []( Productos &a,  Productos &b) {return a.get_cost() < b.get_cost();});
+                        //*************************************************************
+                        
+                        for (int i = 0; i < productos.size(); i++) {
+                            cout << i+1 << ".- " << aux_ord_prod[i].get_name() << ". Cost: " << aux_ord_prod[i].get_cost() << endl;
+                        }
+                    break;
+                }
+            }
+            break;
+        }
+        case 2:
+        {
+            break;
+        }
+    }
 }
