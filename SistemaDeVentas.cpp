@@ -306,7 +306,7 @@ void SistemaDeVentas::EliminarProducto(){ //crear confirmaciones de delete
     cin >> upc;
     for (int i = 0; i < productos.size(); i++) {
         if (upc == productos[i].get_UPC()) {
-            cout << productos[i].get_name() << "eliminado exitosamente" << endl;
+            cout << productos[i].get_name() << " eliminado exitosamente" << endl;
             productos.erase(productos.begin() + i);
             band_prod = 1;
             break;
@@ -315,8 +315,7 @@ void SistemaDeVentas::EliminarProducto(){ //crear confirmaciones de delete
     if (band_prod == 0) {
         cout << "El artículo no fue encontrado" << endl;
     }
-    ofstream archivo_productos(rutaProductos);
-    
+    Actualizar_Productos();
 }
 
 vector<Productos> SistemaDeVentas::leer_productos(){
@@ -412,6 +411,7 @@ void SistemaDeVentas::EditarProducto(){ //crear confirmaciones de edit
             break;
         }
     }
+    Actualizar_Productos(); //Actualiza los cambios que se hayan realizado al momento del edit
 }
 void SistemaDeVentas::VerProductos(){
     productos = SistemaDeVentas::leer_productos();
@@ -427,6 +427,7 @@ void SistemaDeVentas::VerProductos(){
             switch(sort_opc){
                 case 1:
                 {
+                    
                     break;
                 }
                 case 2:
@@ -450,7 +451,76 @@ void SistemaDeVentas::VerProductos(){
         }
         case 2:
         {
+            int opc_fil;
+            cout << "\nFilter by: " << "\n1. Name" << "\n2. ID" << "\n3. UPC" << "\nOption: "; cin >> opc_fil;
+            switch(opc_fil){
+                case 1:
+                {
+                    break;
+                }
+                case 2:
+                {
+                    break;
+                }
+                case 3:
+                {
+                    break;
+                }
+            }
             break;
         }
     }
 }
+void SistemaDeVentas::Actualizar_Productos(){
+    ofstream archivo_p(rutaProductos);
+    for (int i = 0; i < productos.size(); i++) {
+        archivo_p << productos[i].get_UPC() << "," << productos[i].get_name() << "," << productos[i].get_id() << "," << productos[i].get_id_presentation() << "," << productos[i].get_price() << "," << productos[i].get_cost() << "," << productos[i].get_has_iva() << "," << productos[i].get_stock() << endl;
+    }
+    archivo_p.close();
+}
+
+//Propuesta para ordenación de vector:
+//#include <algorithm> // Para la función sort
+//#include <functional> // Para std::greater y std::less
+//#include <iostream>
+//#include <vector>
+//#include "Productos.h" // Asumiendo que tienes una definición de la clase Productos
+//
+//using namespace std;
+//
+//// Definición de la función para ordenar el vector por un atributo específico
+//void SistemaDeVentas::OrdenarProductosPorAtributo(int atributo) {
+//    switch (atributo) {
+//        case 1: // Ordenar por stock
+//            sort(productos.begin(), productos.end(), [](const Productos& a, const Productos& b) {
+//                return a.get_stock() < b.get_stock(); // Orden ascendente
+//            });
+//            break;
+//        case 2: // Ordenar por precio
+//            sort(productos.begin(), productos.end(), [](const Productos& a, const Productos& b) {
+//                return a.get_price() < b.get_price(); // Orden ascendente
+//            });
+//            break;
+//        // Puedes agregar más casos para otros atributos como nombre, etc.
+//        default:
+//            cout << "Atributo no válido." << endl;
+//            break;
+//    }
+//}
+//
+//int main() {
+//    // Suponiendo que ya tienes el vector productos lleno con objetos de la clase Productos
+//    // Aquí deberías llamar a la función OrdenarProductosPorAtributo con el atributo deseado
+//
+//    // Ordenar por stock (atributo 1)
+//    OrdenarProductosPorAtributo(1);
+//
+//    // Luego puedes imprimir el vector ordenado o hacer lo que necesites con él
+//    for (const auto& producto : productos) {
+//        // Imprimir cada producto ordenado por stock
+//        cout << "Nombre: " << producto.get_name() << ", Stock: " << producto.get_stock() << endl;
+//    }
+//
+//    return 0;
+//}
+
