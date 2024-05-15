@@ -11,7 +11,7 @@ Productos::~Productos(){
 void Productos::set_id(int id_unique){
     _id_unique = id_unique;
 }
-int Productos::get_id(){
+int Productos::get_id() {
     return _id_unique;
 }
 void Productos::set_UPC(string UPC){
