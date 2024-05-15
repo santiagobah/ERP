@@ -1,5 +1,4 @@
 #include "SistemaDeVentas.h"
-
 SistemaDeVentas::SistemaDeVentas()
 {
 	rutaUsuarios = "./Scr/Usuarios.csv";
@@ -144,7 +143,8 @@ vector<Usuarios> SistemaDeVentas::LeerUsuarios()
 
 void SistemaDeVentas::MenuPrincipal()
 {
-    GestionDeProductos();
+    //GestionDeProductos();
+    GestionDeClientes();
 	cout << "Menu Principal" << endl;
 	cout << "1. Administrador" << endl;
 	cout << "2. Vendedor" << endl;
@@ -524,3 +524,193 @@ void SistemaDeVentas::Actualizar_Productos(){
 //    return 0;
 //}
 
+void SistemaDeVentas::GestionDeClientes(){
+    int opc_cli;
+    do {
+        cout << "\nBienvenido al Menú de Clientes: " << "\n1. Add Client" << "\n2. Edit Client" << "\n3. See Clients" << "\n4. Delete Client" << "\n5.Return" << "\nOption: "; cin >> opc_cli;
+        switch(opc_cli){
+            case 1:
+            {
+                AgregarCliente();
+                break;
+            }
+            case 2:
+            {
+                EditarCliente();
+                break;
+            }
+            case 3:
+            {
+                VerClientes();
+                break;
+            }
+            case 4:
+            {
+                EliminarCliente();
+                break;
+            }
+            case 5:
+            {
+                break;
+            }
+        }
+    } while (opc_cli != 5);
+}
+void SistemaDeVentas::AgregarCliente(){ //Corregir con cin.ignore()
+    clientes = leer_clientes();
+    int actual_id_cliente = 0;
+    string name, rfc, address, city, state, zipcode;
+    int id_c, reg_fis_id;
+    ofstream archivo_clientes(rutaClientes, ios::app);
+    cout << "\nType the client´s name: "; cin >> name; archivo_clientes << "\n" << name << ",";
+    cout << "Type the rfc of " << name << ": "; cin >> rfc; archivo_clientes << rfc << ",";
+    cout << "Type the address of " << name << ": "; cin >> address; archivo_clientes << address << ",";
+    cout << "Type the city where " << name << " lives: "; cin >> city; archivo_clientes << city << ",";
+    cout << "Type the state where " << name << " lives: "; cin >> state; archivo_clientes << state << ",";
+    cout << "Type the zipcode where " << address << " is located: "; cin >> zipcode; archivo_clientes << zipcode << ",";
+    cout << "Type the ID for the 'fiscal register' of " << name << ": "; cin >> reg_fis_id; archivo_clientes << reg_fis_id << ",";
+    cout << "The assigned id for " << name << " is " << actual_id_cliente; archivo_clientes << actual_id_cliente;
+    Clientes nuevoCliente = Clientes(actual_id_cliente, name, rfc, reg_fis_id, address, city, state, zipcode);
+    clientes.push_back(nuevoCliente);
+    archivo_clientes.close();
+}
+void SistemaDeVentas::EditarCliente(){
+    clientes = SistemaDeVentas::leer_clientes();
+    int opc_cli_edit;
+    cout << "Choose the client which information you would like to edit: " << endl;
+    for (int i  = 0; i < clientes.size(); i++) {
+        cout << i+1 << ".- " << clientes[i].getName() << endl;
+    }
+    cout << "Client to edit: "; cin >> opc_cli_edit;
+    int var_edit;
+    cout << "You are now editing " << clientes[opc_cli_edit-1].getName() << "'s data. " << "\nChoose the variable to edit: ";
+    cout << "\n1. Name" << "\n2. RFC" << "\n3. Address" << "\n4. City" << "\n5. State" << "\n6. Zipcode" << "\n7. Fiscal Regimen" << "\nOption: ";  cin >> var_edit;
+    switch(var_edit){
+        case 1:
+        {
+            string new_name;
+            cout << "Type the new name: "; cin.ignore(); getline(cin, new_name);
+            clientes[opc_cli_edit-1].setName(new_name);
+            break;
+        }
+        case 2:
+        {
+            string new_rfc;
+            cout << "Type the new RFC of " << clientes[opc_cli_edit-1].getName() << ": "; cin.ignore(); getline(cin, new_rfc);
+            clientes[opc_cli_edit-1].setRFC(new_rfc);
+            break;
+        }
+        case 3:
+        {
+            string new_address;
+            cout << "Type the new address of " << clientes[opc_cli_edit-1].getName() << ": "; cin.ignore(); getline(cin, new_address);
+            clientes[opc_cli_edit-1].setAddress(new_address);
+            break;
+        }
+        case 4:
+        {
+            string new_city;
+            cout << "Type the new city of " << clientes[opc_cli_edit-1].getName() << ": "; cin.ignore(); getline(cin, new_city);
+            clientes[opc_cli_edit-1].setCity(new_city);
+            break;
+        }
+        case 5:
+        {
+            string new_state;
+            cout << "Type the new state of " << clientes[opc_cli_edit-1].getName() << ": "; cin.ignore(); getline(cin, new_state);
+            clientes[opc_cli_edit-1].setState(new_state);
+            break;
+        }
+        case 6:
+        {
+            string new_zipcode;
+            cout << "Type the new zipcode of " << clientes[opc_cli_edit-1].getName() << ": "; cin.ignore(); getline(cin, new_zipcode);
+            clientes[opc_cli_edit-1].setZipCode(new_zipcode);
+            break;
+        }
+        case 7:
+        {
+            int new_fiscal_regimen;
+            cout << "Type the new fiscal regimen of " << clientes[opc_cli_edit-1].getName() << ": "; cin >> new_fiscal_regimen;
+            clientes[opc_cli_edit-1].setRegimenFiscalID(new_fiscal_regimen);
+            break;
+        }
+    }
+    Actualizar_Clientes();
+}
+void SistemaDeVentas::VerClientes(){
+    clientes = leer_clientes();
+    int opc_bus_cli;
+    cout << "\nChoose an option: " << "\n1. See all Clients" << "\n2. Seacrh by name" << "\n3. Search by city" << "\n4. Search by state" << "\nOption: "; cin >> opc_bus_cli;
+    switch (opc_bus_cli) {
+        case 1:
+        {
+            for (int i = 0; i < clientes.size(); i++) {
+                cout << i+1 << ".- " << clientes[i].getName() << " - " << clientes[i].getID() << endl;
+            }
+            break;
+        }
+        case 2:
+        {
+            break;
+        }
+        case 3:
+        {
+            break;
+        }
+        case 4:
+        {
+            break;
+        }
+    }
+}
+void SistemaDeVentas::EliminarCliente(){
+    
+}
+vector<Clientes> SistemaDeVentas::leer_clientes(){
+    vector<Clientes> clientes1;
+    ifstream lectura_clientes(rutaClientes.c_str());
+    string linea;
+    while (getline(lectura_clientes, linea)) {
+        string name, rfc, address, city, state, zipcode;
+        int id_c, reg_fis_id;
+        vector<string> carga_clientes;
+        string parte;
+        for (int i = 0; i < linea.size(); i++) {
+            if (linea[i] == ',') {
+                carga_clientes.push_back(parte);
+                parte = "";
+            }
+            else{
+                parte += linea[i];
+            }
+        }
+        carga_clientes.push_back(parte);
+        name  = carga_clientes[0];
+        rfc = carga_clientes[1];
+        address = carga_clientes[2];
+        city =  carga_clientes[3];
+        state = carga_clientes[4];
+        zipcode = carga_clientes[5];
+        reg_fis_id = stoi(carga_clientes[6]);
+        id_c = stoi(carga_clientes[7]);
+        Clientes cliente_guardado = Clientes(id_c, name, rfc, reg_fis_id, address, city, state, zipcode);
+        cliente_guardado.setID(id_c);
+        cliente_guardado.setName(name);
+        cliente_guardado.setRFC(rfc);
+        cliente_guardado.setRegimenFiscalID(reg_fis_id);
+        cliente_guardado.setAddress(address);
+        cliente_guardado.setCity(city);
+        cliente_guardado.setState(state);
+        cliente_guardado.setZipCode(zipcode);
+        clientes1.push_back(cliente_guardado);
+    }
+    return clientes1;
+}
+void SistemaDeVentas::Actualizar_Clientes(){
+    ofstream archivo_clientes(rutaClientes);
+    for (int i = 0; i < clientes.size() ; i++) {
+        archivo_clientes << clientes[i].getName() << "," << clientes[i].getRFC() << "," << clientes[i].getAddress() << "," << clientes[i].getCity() << "," << clientes[i].getState() << "," << clientes[i].getZipCode() << "," << clientes[i].getRegimenFiscalID() << "," << clientes[i].getID() << endl;
+    }
+    archivo_clientes.close();
+}
