@@ -26,9 +26,9 @@ private:
 	void IniciarSesion();
 	void ValidacionDeCredenciales();
 	vector<Usuarios> LeerUsuarios();
-	/*vector<Clientes> LeerClientes();
+	//vector<Clientes> LeerClientes();
 	vector<Productos> LeerProductos();
-	vector<Ventas> LeerVentas();
+	/*vector<Ventas> LeerVentas();
 	vector<ProductosVendidos> LeerProductosVendidos();
 
 	void GuardarUsuarios(vector<Usuarios> usuarios);
@@ -38,7 +38,7 @@ private:
 	void GuardarProductosVendidos(vector<ProductosVendidos> productosVendidos);*/
 
 	void MenuPrincipal();
-	/*void MenuAdministrador();
+	void MenuAdministrador();
 	void MenuVendedor();
 	void MenuRH();
 	void MenuAlmacen();
@@ -47,17 +47,17 @@ private:
 		void AgregarUsuario();
 		void EditarUsuario();
 		void EliminarUsuario();
-	void GestionDeClientes();
+	/*void GestionDeClientes();
 		void AgregarCliente();
 		void EditarCliente();
 		void VerClientes();
-		void EliminarCliente();
+		void EliminarCliente();*/
 	void GestionDeProductos();
 		void AgregarProducto();
 		void EditarProducto();
 		void VerProductos();
 		void EliminarProducto();
-	void GestionDeVentas();
+	/*void GestionDeVentas();
 		void AgregarVenta();
 		void VerVentas();
 	void GestionDeInformes();
@@ -68,7 +68,6 @@ private:
 
 
 	DateTime ConvertirFechaADateTime();
-	DateTimeV ConvertirFechaADateTimeV();
 	void PausaConEnter();
 	void LimpiarPantalla();
 
@@ -87,6 +86,7 @@ private:
 	string rutaProductosVendidos;
 	string rutaPresentaciones;
 	string rutaRegimenesFiscales;
+	Usuarios* usuarioActual;
 
 
 };

@@ -3,17 +3,16 @@
 #include <string>
 #include <vector>
 #include <fstream>
+#include "DateTime.h"
 
 using namespace std;
 
-struct DateTime
+enum Roles
 {
-    int year;
-    int month;
-    int day;
-    int hour;
-    int minute;
-    int second;
+	ADMIN = 1,
+	VENDEDOR = 2,
+	RH = 3,
+	ALMACEN = 4
 };
 
 class Usuarios
@@ -21,7 +20,7 @@ class Usuarios
 public:
 	Usuarios(string name, string surname, string username, string password, string role, int id, DateTime date_joined);
 	~Usuarios();
-
+	
 	void setId(int id);
 	int getId();
 	void setUsername(string username);
@@ -30,6 +29,7 @@ public:
 	string getPassword();
 	void setRole(string role);
 	string getRole();
+	int getRoleInt();
 	void setName(string name);
 	string getName();
 	void setLastname(string lastname);
@@ -47,5 +47,4 @@ private:
     string _name;
     string _lastname;
 	DateTime _date_joined;
-
 };
