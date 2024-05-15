@@ -348,7 +348,7 @@ void SistemaDeVentas::AgregarUsuario()
 			<< "1. Admin" << endl 
 			<< "2. Vendedor" << endl 
 			<< "3. RH" << endl 
-			<< " 4. Almacen" << endl
+			<< "4. Almacen" << endl
 			<< "Option: ";
 		cin >> id;
 		switch (id)
@@ -383,10 +383,134 @@ void SistemaDeVentas::AgregarUsuario()
 
 void SistemaDeVentas::EditarUsuario()
 {
+	usuarios = LeerUsuarios();
+	cout << "Choose the user which you want to select: " << endl;
+	int user_edit;
+	for (int i = 0; i < usuarios.size(); i++) {
+		cout << i + 1 << ".- " << usuarios[i].getName() << " " << usuarios[i].getLastname() << " (" << usuarios[i].getRole() << ") " << endl;
+	}
+	cout << "User to edit: ";
+	cin >> user_edit;
+	int var_edit;
+	cout << "You are now editing " << usuarios[user_edit - 1].getName() << " " << usuarios[user_edit - 1].getLastname() << " (" << usuarios[user_edit - 1].getRole() << ") " << endl;
+	cout << "Choose the variable to edit: " << endl;
+	cout << "1. Name" 
+		<< "\n2. Lastname" 
+		<< "\n3. Username" 
+		<< "\n4. Password" 
+		<< "\n5. Role" 
+		<< "\nOption: "; 
+	cin >> var_edit;
+	switch (var_edit)
+	{
+	case 1:
+	{
+		string new_name;
+		cout << "Type the new name: "; 
+		cin.ignore(); 
+		getline(cin, new_name);
+		usuarios[user_edit - 1].setName(new_name);
+		break;
+	}
+	case 2:
+	{
+		string new_lastname;
+		cout << "Type the new lastname: "; 
+		cin.ignore(); 
+		getline(cin, new_lastname);
+		usuarios[user_edit - 1].setLastname(new_lastname);
+		break;
+	}
+	case 3:
+	{
+		string new_username;
+		cout << "Type the new username: "; 
+		cin >> new_username;
+		usuarios[user_edit - 1].setUsername(new_username);
+		break;
+	}
+	case 4:
+	{
+		string new_password;
+		cout << "Type the new password: "; 
+		cin >> new_password;
+		usuarios[user_edit - 1].setPassword(usuarios[user_edit - 1].Encrypt(new_password));
+		break;
+	}
+	case 5:
+	{
+		string new_role;
+		int opc_role = 0;
+		while (opc_role < 1 || opc_role > 4) {
+			cout << "Select the role of the user: " << endl
+				<< "1. Admin" << endl
+				<< "2. Vendedor" << endl
+				<< "3. RH" << endl
+				<< " 4. Almacen" << endl
+				<< "Option: ";
+			cin >> opc_role;
+			switch (opc_role)
+			{
+				case 1:
+					new_role = "Admin";
+					break;
+				case 2:
+					new_role = "Vendedor";
+					break;
+				case 3:
+					new_role = "RH";
+					break;
+				case 4:
+					new_role = "Almacen";
+					break;
+			}
+		}
+		usuarios[user_edit - 1].setRole(new_role);
+		break;
+	}
+	}
+	ofstream archivo;
+	archivo.open(rutaUsuarios.c_str(), fstream::out);
+	for (int i = 0; i < usuarios.size(); i++) {
+		archivo << usuarios[i].getId() << "," << usuarios[i].getName() << "," << usuarios[i].getLastname() << "," << usuarios[i].getUsername() << "," << usuarios[i].getPassword() << "," << usuarios[i].getRole() << "," << usuarios[i].getDateJoined().year << "," << usuarios[i].getDateJoined().month << "," << usuarios[i].getDateJoined().day << "," << usuarios[i].getDateJoined().hour << "," << usuarios[i].getDateJoined().minute << "," << usuarios[i].getDateJoined().second << endl;
+	}
+	archivo.close();
 }
 
 void SistemaDeVentas::EliminarUsuario()
 {
+	usuarios = LeerUsuarios();
+	string username;
+	int id_user = 0;
+	for (int i = 0; i < usuarios.size(); i++) {
+		cout << i + 1 << ".- " << usuarios[i].getName() << " " << usuarios[i].getLastname() << " (" << usuarios[i].getRole() << ") " << endl;
+	}
+	cout << "Type the username of the user to delete: ";
+	cin >> id_user;
+	//confirmar si se quiere eliminar
+	int opc_del;
+	cout << "Are you sure you want to delete this user? " << endl
+		<< "Data: " << usuarios[id_user - 1].getName() << " " << usuarios[id_user - 1].getLastname() << " (" << usuarios[id_user - 1].getRole() << ") " << endl
+		<< "1. YES" << endl
+		<< "2. NO" << endl
+		<< "Option: ";
+	cin >> opc_del;
+	if (opc_del == 1) {
+
+		usuarios.erase(usuarios.begin() + id_user - 1);
+		ofstream archivo;
+		archivo.open(rutaUsuarios.c_str(), fstream::out);
+		for (int i = 0; i < usuarios.size(); i++) {
+			archivo << usuarios[i].getId() << "," << usuarios[i].getName() << "," << usuarios[i].getLastname() << "," 
+				<< usuarios[i].getUsername() << "," << usuarios[i].getPassword() << "," << usuarios[i].getRole() << "," 
+				<< usuarios[i].getDateJoined().year << "," << usuarios[i].getDateJoined().month 
+				<< "," << usuarios[i].getDateJoined().day << "," << usuarios[i].getDateJoined().hour 
+				<< "," << usuarios[i].getDateJoined().minute << "," << usuarios[i].getDateJoined().second 
+				<< endl;
+		}
+		archivo.close();
+	}
+
 }
 
 void SistemaDeVentas::GestionDeProductos()
