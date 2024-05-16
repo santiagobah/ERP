@@ -32,6 +32,7 @@ public:
 	int getClientID();
 	void setTotal(float total);
 	float getTotal();
+    
 private:
 	int _ID;
 	DateTimeV _DateOfSale;

@@ -35,6 +35,7 @@ private:
     void EditarProducto();
     void VerProductos();
     void EliminarProducto();
+    void Actualizar_Productos();
     vector<Productos> productos;
     vector<Productos> leer_productos();
     string rutaProductos;
@@ -58,7 +59,10 @@ private:
     void EditarCliente();
     void VerClientes();
     void EliminarCliente();
+    void Actualizar_Clientes();
     vector<Clientes> clientes;
+    vector<Clientes> leer_clientes();
+    string rutaClientes;
     
     //Ventas:
     void GestionDeVentas();
@@ -92,11 +96,10 @@ private:
 	vector<Presentacion> presentaciones;
 	vector<RegimenFiscal> regimenesFiscales;
 	string rutaUsuarios;
-	string rutaClientes;
 	string rutaVentas;
 	string rutaProductosVendidos;
 	string rutaPresentaciones;
 	string rutaRegimenesFiscales;
 
-
+    Usuarios* usuarioActual;
 };
