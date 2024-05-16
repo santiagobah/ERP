@@ -209,7 +209,7 @@ void SistemaDeVentas::MenuAdministrador()
             break;
         case 2:
             // Llama al método GestionDeClientes
-            //GestionDeClientes();
+            GestionDeClientes();
             break;
         case 3:
             // Llama al método GestionDeProductos
