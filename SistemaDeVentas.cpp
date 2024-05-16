@@ -117,14 +117,15 @@ void SistemaDeVentas::ValidacionDeCredenciales()
 vector<Usuarios> SistemaDeVentas::LeerUsuarios()
 {
 	ifstream archivoLeido(rutaUsuarios.c_str());
-	vector<Usuarios> usuarios;
-	string linea, dato;
+	vector<Usuarios> usuarios1;
+	string linea;
 	while (getline(archivoLeido, linea))
 	{
 		string username, password, role, name, lastname;
-		int id, shift;
+		int id;
 		DateTime dateJoined;
 		vector<string> CargAtrib;
+		string dato;
 		for (int i = 0; i < linea.size(); i++)
 		{
 			if (linea[i] == ',')
@@ -144,19 +145,19 @@ vector<Usuarios> SistemaDeVentas::LeerUsuarios()
 		username = CargAtrib[3];
 		password = CargAtrib[4];
 		role = CargAtrib[5];
-		DateTime DateJoined;
 		int year = stoi(CargAtrib[6]);
 		int month = stoi(CargAtrib[7]);
 		int day = stoi(CargAtrib[8]);
 		int hour = stoi(CargAtrib[9]);
 		int minute = stoi(CargAtrib[10]);
 		int second = stoi(CargAtrib[11]);
-		DateJoined = DateTime{ year, month, day, hour, minute, second };
-		Usuarios auxUsuario = Usuarios(name, lastname, username, password, role, id, DateJoined);
-		usuarios.push_back(auxUsuario);
+		dateJoined = DateTime{ year, month, day, hour, minute, second };
+		Usuarios auxUsuario = Usuarios(name, lastname, username, password, role, id, dateJoined);
+		auxUsuario.setId(id);
+		usuarios1.push_back(auxUsuario);
 	}
 	archivoLeido.close();
-	return usuarios;
+	return usuarios1;
 }
 
 vector<Productos> SistemaDeVentas::LeerProductos()
