@@ -101,5 +101,5 @@ private:
 	string rutaPresentaciones;
 	string rutaRegimenesFiscales;
 
-
+    Usuarios* usuarioActual;
 };

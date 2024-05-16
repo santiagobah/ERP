@@ -8,143 +8,173 @@ SistemaDeVentas::SistemaDeVentas()
 	rutaProductosVendidos = "./Scr/ProductosVendidos.csv";
 	rutaPresentaciones = "./Scr/Presentaciones.csv";
 	rutaRegimenesFiscales = "./Scr/RegimenesFiscales.csv";
+    usuarioActual = nullptr;
 
 }
 
-SistemaDeVentas::~SistemaDeVentas(){
+//Corregir: Ya no sirve el usuario admin una vez que se registraron nuevos, o eso fue por la prueba que hice? no estoy seguro xd, verificar al final
+
+SistemaDeVentas::~SistemaDeVentas()
+{
+    delete usuarioActual;
 }
 
 void SistemaDeVentas::MenuInicial()
 {
-	cout << "Bienvenido al sistema de ventas" << endl;
-	cout << "1. Iniciar sesion" << endl;
-	cout << "2. Salir" << endl;
-	int opcion;
-	cin >> opcion;
-	switch (opcion)
-	{
-	case 1:
-		IniciarSesion();
-		break;
-	case 2:
-		break;
-	default:
-		LimpiarPantalla();
-		cout << "Opcion no valida" << endl;
-		PausaConEnter();
-		break;
-	}
+    //GestionDeUsuarios();
+
+    // Limpia la pantalla antes de mostrar el menú
+    LimpiarPantalla();
+    // Variable para almacenar la opción seleccionada por el usuario
+    int opcionMI = 0;
+    // Bucle que se ejecuta hasta que el usuario elige salir del juego
+    while (opcionMI != 2) {
+        // Muestra las opciones del menú y solicita la entrada del usuario
+        cout << "Menu de Inicio: " << endl
+            << "1. Iniciar Sesion" << endl
+            << "2. Salir del Sistema" << endl
+            << "Opcion: ";
+        cin >> opcionMI;
+        // Realiza acciones basadas en la opción seleccionada por el usuario
+        switch (opcionMI)
+        {
+        case 1:
+            // Llama al método MenuPrincipal() para mostrar el menú principal del Sistema
+            IniciarSesion();
+            break;
+        case 2:
+            LimpiarPantalla();
+            break;
+        default:
+            // En caso de que el usuario seleccione una opción no válida, muestra un mensaje de error
+            // y espera a que el usuario presione Enter
+            LimpiarPantalla();
+            cout << "Selecciona una de las opciones validas" << endl;
+            PausaConEnter();
+            break;
+        }
+        // Limpia la pantalla antes de mostrar el menú nuevamente
+        LimpiarPantalla();
+    }
 }
 
 void SistemaDeVentas::IniciarSesion()
 {
-	LimpiarPantalla();
-	ifstream archivoLeido(rutaUsuarios.c_str());
+    LimpiarPantalla();
+    ifstream archivoLeido(rutaUsuarios.c_str());
     if (!archivoLeido) {
         ofstream archivo;
         archivo.open(rutaUsuarios.c_str(), fstream::out);
-		DateTime dateJoined = ConvertirFechaADateTime();
-		Usuarios auxUsuario = Usuarios("admin", "admin", "admin", "admin", "admin", 1, dateJoined);
-		archivo << "1,admin,admin,admin," << auxUsuario.Encrypt("admin") << ",admin," 
-			<< dateJoined.year << "," << dateJoined.month << "," << dateJoined.day << "," << dateJoined.hour << "," 
-			<< dateJoined.minute << "," << dateJoined.second << endl;
-		archivo.close();
-		string password = auxUsuario.Encrypt(auxUsuario.getPassword());
-		auxUsuario.setPassword(password);
-		usuarios.push_back(auxUsuario);
-		archivoLeido.close();
-	}
-	else
-	{
-		archivoLeido.close();
-		usuarios = LeerUsuarios();
-		
-	}
-	ValidacionDeCredenciales();
+        DateTime dateJoined = ConvertirFechaADateTime();
+        Usuarios auxUsuario = Usuarios("Admin", "Admin", "admin", "admin", "Admin", 1, dateJoined);
+        archivo << "1,admin,admin,admin," << auxUsuario.Encrypt("admin") << ",Admin,"
+            << dateJoined.year << "," << dateJoined.month << "," << dateJoined.day << ","
+            << dateJoined.hour << "," << dateJoined.minute << "," << dateJoined.second << endl;
+        archivo.close();
+        string password = auxUsuario.Encrypt(auxUsuario.getPassword());
+        auxUsuario.setPassword(password);
+        usuarioActual = new Usuarios(auxUsuario.getName(), auxUsuario.getLastname(), auxUsuario.getUsername(), auxUsuario.getPassword(), auxUsuario.getRole(), auxUsuario.getId(), auxUsuario.getDateJoined());
+        usuarios.push_back(auxUsuario);
+    }
+    else
+    {
+        usuarios = LeerUsuarios();
+    }
+    ValidacionDeCredenciales();
 }
 
 void SistemaDeVentas::ValidacionDeCredenciales()
 {
-	int contador = 1;
-	bool bandera = false;
-	do {
-		string username, password;
-		cout << "Ingrese su nombre de usuario: ";
-		cin >> username;
-		cout << "Ingrese su contrase–a: ";
-		cin >> password;
-		for (int i = 0; i < usuarios.size(); i++)
-		{
-			if (username == usuarios[i].getUsername() && usuarios[i].Encrypt(password) == usuarios[i].getPassword())
-			{
-				bandera = true;
-			}
-		}
-		if (bandera)
-		{
-			MenuPrincipal();
-		}
-		else
-		{
-			if (contador == 3)
-			{
-				exit(1);
-			}
-			cout << "Usuario o contrase–a incorrectos" << endl;
-			PausaConEnter();
-			contador++;
-		}
-	} while (bandera == false);
+    int contador = 1;
+    bool bandera = false;
+    do {
+        string username, password;
+        cout << "Ingrese su nombre de usuario: ";
+        cin >> username;
+        cout << "Ingrese su contrase–a: ";
+        cin >> password;
+        for (int i = 0; i < usuarios.size(); i++)
+        {
+            if (username == usuarios[i].getUsername() && usuarios[i].Encrypt(password) == usuarios[i].getPassword())
+            {
+                bandera = true;
+                usuarioActual = new Usuarios(usuarios[i].getName(), usuarios[i].getLastname(), usuarios[i].getUsername(), usuarios[i].getPassword(), usuarios[i].getRole(), usuarios[i].getId(), usuarios[i].getDateJoined());
+            }
+        }
+        if (bandera)
+        {
+            MenuPrincipal();
+        }
+        else
+        {
+            if (contador == 3)
+            {
+                exit(1);
+            }
+            cout << "Usuario o contrase–a incorrectos" << endl;
+            PausaConEnter();
+            contador++;
+        }
+    } while (bandera == false);
 }
 
-vector<Usuarios> SistemaDeVentas::LeerUsuarios() 
+vector<Usuarios> SistemaDeVentas::LeerUsuarios()
 {
-	vector<Usuarios> usuarios;
-	ifstream archivoLeido(rutaUsuarios.c_str());
-	string linea, dato;
-	while (getline(archivoLeido, linea))
-	{
-		string username, password, role, name, lastname;
-		int id, year, month, day, hour, minute, second;
-		time_t dateJoined;
-		vector<string> CargAtrib;
-		for (int i = 0; i < linea.size(); i++)
-		{
-			if (linea[i] == ',')
-			{
-				CargAtrib.push_back(dato);
-				dato = "";
-			}
-			else
-			{
-				dato += linea[i];
-			}
-		}
-		CargAtrib.push_back(dato);
-		id = stoi(CargAtrib[0]);
-		name = CargAtrib[1];
-		lastname = CargAtrib[2];
-		username = CargAtrib[3];
-		password = CargAtrib[4];
-		role = CargAtrib[5];
-		year = stoi(CargAtrib[6]);
-		month = stoi(CargAtrib[7]);
-		day = stoi(CargAtrib[8]);
-		hour = stoi(CargAtrib[9]);
-		minute = stoi(CargAtrib[10]);
-		second = stoi(CargAtrib[11]);
-		DateTime AuxDateJoined = { year, month, day, hour, minute, second };
-		Usuarios auxUsuario = Usuarios(name, lastname, username, password, role, id, AuxDateJoined);
-		usuarios.push_back(auxUsuario);
-	}
-	archivoLeido.close();
-	return usuarios;
+    ifstream archivoLeido(rutaUsuarios.c_str());
+    vector<Usuarios> usuarios1;
+    string linea;
+    while (getline(archivoLeido, linea))
+    {
+        string username, password, role, name, lastname;
+        int id;
+        DateTime DateJoined;
+        vector<string> CargAtrib;
+        string dato;
+        for (int i = 0; i < linea.size(); i++)
+        {
+            if (linea[i] == ',')
+            {
+                CargAtrib.push_back(dato);
+                dato = "";
+            }
+            else
+            {
+                dato += linea[i];
+            }
+        }
+        CargAtrib.push_back(dato);
+        id = stoi(CargAtrib[0]);
+        name = CargAtrib[1];
+        lastname = CargAtrib[2];
+        username = CargAtrib[3];
+        password = CargAtrib[4];
+        role = CargAtrib[5];
+        int year = stoi(CargAtrib[6]);
+        int month = stoi(CargAtrib[7]);
+        int day = stoi(CargAtrib[8]);
+        int hour = stoi(CargAtrib[9]);
+        int minute = stoi(CargAtrib[10]);
+        int second = stoi(CargAtrib[11]);
+        DateJoined = DateTime{ year, month, day, hour, minute, second };
+        Usuarios auxUsuario = Usuarios(name, lastname, username, password, role, id, DateJoined);
+        auxUsuario.setName(name);
+        auxUsuario.setLastname(lastname);
+        auxUsuario.setUsername(username);
+        auxUsuario.setPassword(password);
+        auxUsuario.setRole(role);
+        auxUsuario.setId(id);
+        auxUsuario.setDateJoined(DateJoined);
+        usuarios1.push_back(auxUsuario);
+    }
+    archivoLeido.close();
+    return usuarios1;
 }
+
 
 void SistemaDeVentas::MenuPrincipal()
 {
     //GestionDeProductos();
-    GestionDeClientes();
+    //GestionDeClientes();
 	cout << "Menu Principal" << endl;
 	cout << "1. Administrador" << endl;
 	cout << "2. Vendedor" << endl;
@@ -713,4 +743,250 @@ void SistemaDeVentas::Actualizar_Clientes(){
         archivo_clientes << clientes[i].getName() << "," << clientes[i].getRFC() << "," << clientes[i].getAddress() << "," << clientes[i].getCity() << "," << clientes[i].getState() << "," << clientes[i].getZipCode() << "," << clientes[i].getRegimenFiscalID() << "," << clientes[i].getID() << endl;
     }
     archivo_clientes.close();
+}
+
+void SistemaDeVentas::GestionDeUsuarios()
+{
+    // Variable para almacenar la opción seleccionada por el usuario
+    int opcionGU = 0;
+    do {
+        // Limpia la pantalla antes de mostrar el menú
+        LimpiarPantalla();
+        cout << "\nBienvenido al menú de Usuarios" << endl;
+        // Muestra las opciones del menú y solicita la entrada del usuario
+        cout <<
+            "1. Add Users" <<
+            "\n2. Edit Users" <<
+            "\n3. Delete Users" <<
+            "\n4. Return" <<
+            "\nOpción elegida: ";
+        cin >> opcionGU;
+        switch (opcionGU) {
+        case 1:
+        {
+            AgregarUsuario();
+            break;
+        }
+        case 2:
+        {
+            EditarUsuario();
+            break;
+        }
+        case 3:
+        {
+            EliminarUsuario();
+            break;
+        }
+        case 4:
+        {
+            break;
+        }
+        default:
+        {
+            LimpiarPantalla();
+            cout << "Seleccione una opción válida" << endl;
+            PausaConEnter();
+            break;
+        }
+        }
+    } while (opcionGU != 4);
+}
+
+void SistemaDeVentas::AgregarUsuario()
+{
+    usuarios = LeerUsuarios();
+    string name, surname, username, password, role;
+    int id = 0;
+    DateTime dateJoined = ConvertirFechaADateTime();
+    cout << "\nType the name of the user: ";
+    cin >> name;
+    cout << "Type the surname of the user: ";
+    cin.ignore();
+    getline(cin, surname);
+    cout << "Type the username of the user: ";
+    cin >> username;
+    cout << "Type the password of the user: ";
+    cin >> password;
+    while (id < 1 || id > 4) {
+        cout << "Select the role of the user: " << endl
+        << "1. Admin" << endl
+        << "2. Vendedor" << endl
+        << "3. RH" << endl
+        << "4. Almacen" << endl
+        << "Option: ";
+        cin >> id;
+        switch (id)
+        {
+            case 1:
+                role = "Admin";
+                break;
+            case 2:
+                role = "Vendedor";
+                break;
+            case 3:
+                role = "RH";
+                break;
+            case 4:
+                role = "Almacen";
+                break;
+        }
+    }
+    int cantidad_usuarios = usuarios.size();
+    int current_id = 0;
+    cout << "yamañovectorusuarios" << usuarios.size() << endl;
+    if (usuarios.size() != 0) {
+        current_id = usuarios[cantidad_usuarios-1].getId(); //Para que el ID vaya creciendo
+    }
+    cout << "curentiddd: " << current_id << endl;
+    id = current_id + 1;
+    cout << "idaasignar " << id << endl;
+    Usuarios NuevoUsuario = Usuarios(name, surname, username, password, role, id, dateJoined);
+    NuevoUsuario.setName(name);
+    NuevoUsuario.setLastname(surname);
+    NuevoUsuario.setUsername(username);
+    NuevoUsuario.setPassword(NuevoUsuario.Encrypt(password));
+    NuevoUsuario.setRole(role);
+    NuevoUsuario.setId(id);
+    NuevoUsuario.setDateJoined(dateJoined);
+    usuarios.push_back(NuevoUsuario);
+    ofstream archivo;
+    archivo.open(rutaUsuarios.c_str());
+    for (int i = 0; i < usuarios.size(); i++) {
+        archivo << usuarios[i].getId() << "," << usuarios[i].getName() << "," << usuarios[i].getLastname() << "," << usuarios[i].getUsername() << "," << usuarios[i].getPassword() << "," << usuarios[i].getRole() << "," << usuarios[i].getDateJoined().year << "," << usuarios[i].getDateJoined().month << "," << usuarios[i].getDateJoined().day << "," << usuarios[i].getDateJoined().hour << "," << usuarios[i].getDateJoined().minute << "," << usuarios[i].getDateJoined().second << endl;
+    }
+    archivo.close();
+    //cout << usuarios[2].getDateJoined() << endl;
+
+}
+
+void SistemaDeVentas::EditarUsuario()
+{
+    usuarios = LeerUsuarios();
+    cout << "Choose the user which you want to select: " << endl;
+    int user_edit;
+    for (int i = 0; i < usuarios.size(); i++) {
+        cout << i + 1 << ".- " << usuarios[i].getName() << " " << usuarios[i].getLastname() << " (" << usuarios[i].getRole() << ") " << endl;
+    }
+    cout << "User to edit: ";
+    cin >> user_edit;
+    int var_edit;
+    cout << "You are now editing " << usuarios[user_edit - 1].getName() << " " << usuarios[user_edit - 1].getLastname() << " (" << usuarios[user_edit - 1].getRole() << ") " << endl;
+    cout << "Choose the variable to edit: " << endl;
+    cout << "1. Name"
+        << "\n2. Lastname"
+        << "\n3. Username"
+        << "\n4. Password"
+        << "\n5. Role"
+        << "\nOption: ";
+    cin >> var_edit;
+    switch (var_edit)
+    {
+    case 1:
+    {
+        string new_name;
+        cout << "Type the new name: ";
+        cin.ignore();
+        getline(cin, new_name);
+        usuarios[user_edit - 1].setName(new_name);
+        break;
+    }
+    case 2:
+    {
+        string new_lastname;
+        cout << "Type the new lastname: ";
+        cin.ignore();
+        getline(cin, new_lastname);
+        usuarios[user_edit - 1].setLastname(new_lastname);
+        break;
+    }
+    case 3:
+    {
+        string new_username;
+        cout << "Type the new username: ";
+        cin >> new_username;
+        usuarios[user_edit - 1].setUsername(new_username);
+        break;
+    }
+    case 4:
+    {
+        string new_password;
+        cout << "Type the new password: ";
+        cin >> new_password;
+        usuarios[user_edit - 1].setPassword(usuarios[user_edit - 1].Encrypt(new_password));
+        break;
+    }
+    case 5:
+    {
+        string new_role;
+        int opc_role = 0;
+        while (opc_role < 1 || opc_role > 4) {
+            cout << "Select the role of the user: " << endl
+                << "1. Admin" << endl
+                << "2. Vendedor" << endl
+                << "3. RH" << endl
+                << " 4. Almacen" << endl
+                << "Option: ";
+            cin >> opc_role;
+            switch (opc_role)
+            {
+                case 1:
+                    new_role = "Admin";
+                    break;
+                case 2:
+                    new_role = "Vendedor";
+                    break;
+                case 3:
+                    new_role = "RH";
+                    break;
+                case 4:
+                    new_role = "Almacen";
+                    break;
+            }
+        }
+        usuarios[user_edit - 1].setRole(new_role);
+        break;
+    }
+    }
+    ofstream archivo;
+    archivo.open(rutaUsuarios.c_str(), fstream::out);
+    for (int i = 0; i < usuarios.size(); i++) {
+        archivo << usuarios[i].getId() << "," << usuarios[i].getName() << "," << usuarios[i].getLastname() << "," << usuarios[i].getUsername() << "," << usuarios[i].getPassword() << "," << usuarios[i].getRole() << "," << usuarios[i].getDateJoined().year << "," << usuarios[i].getDateJoined().month << "," << usuarios[i].getDateJoined().day << "," << usuarios[i].getDateJoined().hour << "," << usuarios[i].getDateJoined().minute << "," << usuarios[i].getDateJoined().second << endl;
+    }
+    archivo.close();
+}
+
+void SistemaDeVentas::EliminarUsuario()
+{
+    usuarios = LeerUsuarios();
+    string username;
+    int id_user = 0;
+    for (int i = 0; i < usuarios.size(); i++) {
+        cout << i + 1 << ".- " << usuarios[i].getName() << " " << usuarios[i].getLastname() << " (" << usuarios[i].getRole() << ") " << endl;
+    }
+    cout << "Type the username of the user to delete: ";
+    cin >> id_user;
+    //confirmar si se quiere eliminar
+    int opc_del;
+    cout << "Are you sure you want to delete this user? " << endl
+        << "Data: " << usuarios[id_user - 1].getName() << " " << usuarios[id_user - 1].getLastname() << " (" << usuarios[id_user - 1].getRole() << ") " << endl
+        << "1. YES" << endl
+        << "2. NO" << endl
+        << "Option: ";
+    cin >> opc_del;
+    if (opc_del == 1) {
+
+        usuarios.erase(usuarios.begin() + id_user - 1);
+        ofstream archivo;
+        archivo.open(rutaUsuarios.c_str(), fstream::out);
+        for (int i = 0; i < usuarios.size(); i++) {
+            archivo << usuarios[i].getId() << "," << usuarios[i].getName() << "," << usuarios[i].getLastname() << ","
+                << usuarios[i].getUsername() << "," << usuarios[i].getPassword() << "," << usuarios[i].getRole() << ","
+                << usuarios[i].getDateJoined().year << "," << usuarios[i].getDateJoined().month
+                << "," << usuarios[i].getDateJoined().day << "," << usuarios[i].getDateJoined().hour
+                << "," << usuarios[i].getDateJoined().minute << "," << usuarios[i].getDateJoined().second
+                << endl;
+        }
+        archivo.close();
+    }
+
 }
