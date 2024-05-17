@@ -59,11 +59,12 @@ private:
 		void EliminarProducto();
 	/*void GestionDeVentas();
 		void AgregarVenta();
-		void VerVentas();
+		void VerVentas();*/
 	void GestionDeInformes();
 		void InformeDeVentas();
 		void InformeDeInventarios();
-		void InfromesDeActividadDeUsuarios();*/
+		void InfromesDeActividadDeUsuarios();
+		void RegistroDeUsuarios(string action);
 
 
 
@@ -86,6 +87,7 @@ private:
 	string rutaProductosVendidos;
 	string rutaPresentaciones;
 	string rutaRegimenesFiscales;
+	string rutaUsuariosActividad;
 	Usuarios* usuarioActual;
 
 
