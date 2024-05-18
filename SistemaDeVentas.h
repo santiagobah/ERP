@@ -10,85 +10,114 @@
 #include "Productos.h"
 #include "Ventas.h"
 #include "ProductosVendidos.h"
+#include "Presentacion.h"
 
 using namespace std;
+
+struct RegistroDeActividadUser
+{
+	int ID_user;
+	string action;
+	DateTime date;
+};
 
 // SistemaDeVentas
 class SistemaDeVentas
 {
 public:
-	SistemaDeVentas();
-	~SistemaDeVentas();
+    SistemaDeVentas();
+    ~SistemaDeVentas();
 
-	void MenuInicial();
+    void MenuInicial();
 
 private:
-	void IniciarSesion();
-	void ValidacionDeCredenciales();
-	vector<Usuarios> LeerUsuarios();
-	//vector<Clientes> LeerClientes();
-	vector<Productos> LeerProductos();
-	/*vector<Ventas> LeerVentas();
-	vector<ProductosVendidos> LeerProductosVendidos();
 
-	void GuardarUsuarios(vector<Usuarios> usuarios);
-	void GuardarClientes(vector<Clientes> clientes);
-	void GuardarProductos(vector<Productos> productos);
-	void GuardarVentas(vector<Ventas> ventas);
-	void GuardarProductosVendidos(vector<ProductosVendidos> productosVendidos);*/
+    void IniciarSesion();
+    void ValidacionDeCredenciales();
+    vector<Usuarios> LeerUsuarios();
 
-	void MenuPrincipal();
-	void MenuAdministrador();
-	void MenuVendedor();
-	void MenuRH();
-	void MenuAlmacen();
+    void MenuPrincipal();
+    void MenuAdministrador();
+    void MenuVendedor();
+    void MenuRH();
+    void MenuAlmacen();
 
-	void GestionDeUsuarios();
-		void AgregarUsuario();
-		void EditarUsuario();
-		void EliminarUsuario();
-	/*void GestionDeClientes();
-		void AgregarCliente();
-		void EditarCliente();
-		void VerClientes();
-		void EliminarCliente();*/
-	void GestionDeProductos();
-		void AgregarProducto();
-		void EditarProducto();
-		void VerProductos();
-		void EliminarProducto();
-	/*void GestionDeVentas();
-		void AgregarVenta();
-		void VerVentas();*/
-	void GestionDeInformes();
-		void InformeDeVentas();
-		void InformeDeInventarios();
-		void InfromesDeActividadDeUsuarios();
-		void RegistroDeUsuarios(string action);
+    //Productos:
+    void GestionDeProductos();
+    void AgregarProducto();
+    void EditarProducto();
+    void VerProductos();
+    void EliminarProducto();
+    void Actualizar_Productos();
+    vector<Productos> productos;
+    vector<Productos> leer_productos();
+    string rutaProductos;
 
+    //Usuarios:
+    void GestionDeUsuarios();
+    void AgregarUsuario();
+    void EditarUsuario();
+    void EliminarUsuario();
+    vector<Usuarios> usuarios;
 
+    //Clientes:
+    void GestionDeClientes();
+    void AgregarCliente();
+    void EditarCliente();
+    void VerClientes();
+    void EliminarCliente();
+    void Actualizar_Clientes();
+    vector<Clientes> clientes;
+    vector<Clientes> leer_clientes();
+    string rutaClientes;
 
-	DateTime ConvertirFechaADateTime();
-	void PausaConEnter();
-	void LimpiarPantalla();
+    //Ventas:
+    void GestionDeVentas();
+    void AgregarVenta();
+    void VerVentas();
+    vector<Ventas> ventas;
 
-
-	vector<Ventas> ventas;
-	vector<ProductosVendidos> productosVendidos;
-	vector<Usuarios> usuarios;
-	vector<Productos> productos;
-	vector<Clientes> clientes;
-	vector<Presentacion> presentaciones;
-	vector<RegimenFiscal> regimenesFiscales;
-	string rutaUsuarios;
-	string rutaClientes;
-	string rutaProductos;
-	string rutaVentas;
-	string rutaProductosVendidos;
-	string rutaPresentaciones;
-	string rutaRegimenesFiscales;
-	string rutaUsuariosActividad;
-	Usuarios* usuarioActual;
+    //Informes:
+    void GestionDeInformes();
+    void MenuInformesAdministrador();
+    void MenuInformesVendedor();
+    void MenuInformesRH();
+    void MenuInformesAlmacen();
+    void InformeDeVentas();
+    void InformeDeInventarios();
+    void InfromesDeActividadDeUsuarios();
+    void InformeFiltroPorAccion(vector<RegistroDeActividadUser>& registros);
+    void RegistroDeActividad(string action);
+    void EscribirRegistro(string actionER);
+    vector<RegistroDeActividadUser> leerRegistrosUsuarios();
 
 
+    DateTime ConvertirFechaADateTime();
+    void PausaConEnter();
+    void LimpiarPantalla();
+
+    /*vector<Clientes> LeerClientes();
+     vector<Productos> LeerProductos();
+     vector<Ventas> LeerVentas();
+     vector<ProductosVendidos> LeerProductosVendidos();
+
+     void GuardarUsuarios(vector<Usuarios> usuarios);
+     void GuardarClientes(vector<Clientes> clientes);
+     void GuardarProductos(vector<Productos> productos);
+     void GuardarVentas(vector<Ventas> ventas);
+     void GuardarProductosVendidos(vector<ProductosVendidos> productosVendidos);*/
+
+    vector<ProductosVendidos> productosVendidos;
+    vector<Presentacion> presentaciones;
+    vector<RegimenFiscal> regimenesFiscales;
+    string rutaUsuarios;
+    string rutaVentas;
+    string rutaProductosVendidos;
+    string rutaPresentaciones;
+    string rutaRegimenesFiscales;
+    string rutaRegistrosUsuarios;
+
+    Usuarios* usuarioActual;
 };
+/*
+*/
