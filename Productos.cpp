@@ -2,7 +2,7 @@
 
 //Falta heredar presentación
 
-Productos::Productos(int id_unique, string UPC, string name, int id_presentation, float price, float cost, bool has_iva, int stock) {
+Productos::Productos(int id_unique, string UPC, string name, int id_presentation, float price, float cost, bool has_iva, int stock, int id_p, string name_p): Presentacion(id_p, name_p) {
 }
 
 Productos::~Productos() {

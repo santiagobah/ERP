@@ -6,10 +6,10 @@
 #include "Presentacion.h"
 using namespace std;
 
-class Productos
+class Productos: public Presentacion
 {
 public:
-    Productos(int id_unique, string UPC, string name, int id_presentation, float price, float cost, bool has_iva, int stock);
+    Productos(int id_unique, string UPC, string name, int id_presentation, float price, float cost, bool has_iva, int stock, int id_p, string name_p);
     ~Productos();
 
     void set_id(int id_unique);

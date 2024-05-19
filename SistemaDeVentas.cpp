@@ -444,30 +444,45 @@ void SistemaDeVentas::AgregarProducto() { //Crear excepciones por si a˙n no se c
         productos = SistemaDeVentas::leer_productos(); //Para que inicie el vector ya cargado con los productos que estÈn ya registrados
         int cant_prod_reg = productos.size();
         id_u_actual = productos[cant_prod_reg - 1].get_id();
-        id_p_actual = productos[cant_prod_reg - 1].get_id_presentation();
+        id_p_actual = presentaciones[cant_prod_reg-1].getID();
     }
     ofstream archivo_productos(rutaProductos, ios::app);
     string upc, name;
     float price, cost;
     bool has_iva;
     int stock;
-    cout << "\nScan the barcode of the product: ";
-    cin >> upc; archivo_productos << upc << ",";
-    cout << "Type name for the product: ";
-    cin >> name; archivo_productos << name << ",";
-    cout << "\nThe unique ID for " << name << " is going to be: " << id_u_actual + 1 << endl; archivo_productos << id_u_actual + 1 << ",";
-    cout << "The  ID for this " << name << " presentation is going to be: " << id_p_actual + 1 << endl; archivo_productos << id_p_actual + 1 << ",";
-    cout << "\nType the price for " << name << ": ";
-    cin >> price; archivo_productos << price << ",";
-    cout << "Type the cost for " << name << ": ";
-    cin >> cost; archivo_productos << cost << ",";
-    //Implementar un switch para el IVA
-    cout << name << " has IVA? (1. YES/ 0.NO): "; //implementar mÈtodo que sea un switch para 1.yes, 2.no
-    cin >> has_iva; archivo_productos << has_iva << ",";
-    cout << "How many " << name << " are available right now? ";
-    cin >> stock; archivo_productos << stock << endl;
-    Productos NuevoProducto(id_u_actual, upc, name, id_p_actual, price, cost, has_iva, stock);
-    productos.push_back(NuevoProducto);
+    
+//    cout << "The  ID for this " << name << " presentation is going to be: " << id_p_actual + 1 << endl; archivo_productos << id_p_actual + 1 << ",";
+    string first_part_name;
+    int n_presentations = 0;
+    cout << "Type the main name of the new product: "; cin.ignore(); getline(cin, first_part_name);
+    cout << "How many presentations are there for " << first_part_name << "? "; cin >> n_presentations;
+    for (int i = 0; i < n_presentations; i++) {
+        archivo_productos << first_part_name << ",";
+        ofstream presentaciones_productos(rutaPresentaciones.c_str(), ios::app);
+        cout << "\nAdd something to this name to create a unique name for presentation " << i+1 << " of " << first_part_name << ": " ;
+        cin.ignore(); getline(cin, name); name = first_part_name +  " " + name;
+        cout << "\nScan the barcode of " << name << ": ";
+        cin >> upc; archivo_productos << upc << ",";
+        cout << "\nThe unique ID for " << name << " is going to be: " << id_u_actual + 1 << endl; archivo_productos << id_u_actual + 1 << ",";
+        cout << "\nType the price for " << name << ": ";
+        cin >> price; archivo_productos << price << ",";
+        cout << "Type the cost for " << name << ": ";
+        cin >> cost; archivo_productos << cost << ",";
+        //Implementar un switch para el IVA
+        cout << name << " has IVA? (1. YES/ 0.NO): "; //implementar mÈtodo que sea un switch para 1.yes, 2.no
+        cin >> has_iva; archivo_productos << has_iva << ",";
+        cout << "How many " << name << " are available right now? ";
+        cin >> stock; archivo_productos << stock << ",";
+        cout << "The ID for this presentation of " << name << " is " << id_p_actual + 1 << endl;
+        presentaciones_productos << id_p_actual + 1 << ",";
+        presentaciones_productos << name << endl;
+        archivo_productos << id_p_actual + 1 << endl;
+        Productos NuevoProducto(id_u_actual, upc, first_part_name, id_p_actual, price, cost, has_iva, stock, id_p_actual, name);
+        productos.push_back(NuevoProducto);
+        id_u_actual++;
+        id_p_actual++;
+    }
     archivo_productos.close();
 }
 
@@ -479,60 +494,76 @@ void SistemaDeVentas::EditarProducto() { //crear confirmaciones de edit
     }
     else {
         productos = SistemaDeVentas::leer_productos();
+        presentaciones = leer_presentaciones();
     }
     cout << "Choose the product which you want to edit: " << endl;
     int prod_edit;
-    for (int i = 0; i < productos.size(); i++) {
-        cout << i + 1 << ".- " << productos[i].get_name() << endl;
+    for (int i = 0; i < presentaciones.size(); i++) {
+        cout << i + 1 << ".- " << presentaciones[i].getName() << endl;
     }
     cout << "Product to edit: ";
     cin >> prod_edit;
     int var_edit;
     cout << "You are now editing " << productos[prod_edit - 1].get_name() << endl;
     cout << "Choose the variable to edit: " << endl;
-    cout << "1. Name" << "\n2. Price" << "\n3.Cost" << "\n4. IVA" << "\n5. Stock" << "\nOption: ";
+    cout << "1. Name" << "\n2. Price" << "\n3. Cost" << "\n4. IVA" << "\n5. Stock" << "\n6. Presentation name" <<  "\nOption: ";
     cin >> var_edit;
     switch (var_edit)
     {
-    case 1:
-    {
-        string new_name;
-        cout << "Type the new name: "; cin.ignore(); getline(cin, new_name);
-        productos[prod_edit - 1].set_name(new_name);
-        break;
-    }
-    case 2:
-    {
-        float new_price;
-        cout << "Type the new price for " << productos[prod_edit - 1].get_name() << ": "; cin >> new_price;
-        productos[prod_edit - 1].set_price(new_price);
-        break;
-    }
-    case 3:
-    {
-        float new_cost;
-        cout << "Type the new cost for " << productos[prod_edit - 1].get_name() << ": "; cin >> new_cost;
-        productos[prod_edit - 1].set_cost(new_cost);
-        break;
-    }
-    case 4:
-    {
-        bool set_iva;
-        cout << "Type the new IVA option: "; cin >> set_iva;
-        productos[prod_edit - 1].set_has_iva(set_iva);
-        break;
-    }
-    case 5:
-    {
-        int new_stock;
-        cout << "Type the new stock for " << productos[prod_edit - 1].get_name() << ": "; cin >> new_stock;
-        productos[prod_edit - 1].set_stock(new_stock);
-        break;
-    }
+        case 1:
+        {
+            string new_name;
+            cout << "Type the new name: "; cin.ignore(); getline(cin, new_name);
+            productos[prod_edit - 1].set_name(new_name);
+            break;
+        }
+        case 2:
+        {
+            float new_price;
+            cout << "Type the new price for " << productos[prod_edit - 1].get_name() << ": "; cin >> new_price;
+            productos[prod_edit - 1].set_price(new_price);
+            break;
+        }
+        case 3:
+        {
+            float new_cost;
+            cout << "Type the new cost for " << productos[prod_edit - 1].get_name() << ": "; cin >> new_cost;
+            productos[prod_edit - 1].set_cost(new_cost);
+            break;
+        }
+        case 4:
+        {
+            bool set_iva;
+            cout << "Type the new IVA option: "; cin >> set_iva;
+            productos[prod_edit - 1].set_has_iva(set_iva);
+            break;
+        }
+        case 5:
+        {
+            int new_stock;
+            cout << "Type the new stock for " << productos[prod_edit - 1].get_name() << ": "; cin >> new_stock;
+            productos[prod_edit - 1].set_stock(new_stock);
+            break;
+        }
+        case 6:
+        {
+            string new_presentation_name;
+            cout << "Type the new presentation name for this " << productos[prod_edit-1].get_name() << ": "; cin.ignore(); getline(cin, new_presentation_name);
+            string final_new_presentation_name;
+            final_new_presentation_name = productos[prod_edit-1].get_name() + " " + new_presentation_name;
+            presentaciones[prod_edit-1].setName(final_new_presentation_name);
+            Actualizar_Presentaciones();
+            break;
+        }
     }
     Actualizar_Productos(); //Actualiza los cambios que se hayan realizado al momento del edit
 }
-
+void SistemaDeVentas::Actualizar_Presentaciones(){
+    ofstream presentaciones_pr(rutaPresentaciones.c_str());
+    for (int i  = 0; i < presentaciones.size(); i++) {
+        presentaciones_pr << presentaciones[i].getID() << "," << presentaciones[i].getName() << endl;
+    }
+}
 void SistemaDeVentas::VerProductos() {
     ifstream archivo_pr(rutaProductos.c_str());
     if (!archivo_pr) {
@@ -541,9 +572,12 @@ void SistemaDeVentas::VerProductos() {
     }
     else {
         productos = SistemaDeVentas::leer_productos();
+        presentaciones = leer_presentaciones();
     }
     vector <Productos> aux_ord_prod;
     aux_ord_prod = productos;
+    vector <Presentacion> aux_ord_pres;
+    aux_ord_pres = presentaciones;
     int sort_filter;
     cout << "1. Sort products" << "\n2. Filter products" << "\nOption: "; cin >> sort_filter;
     switch (sort_filter) {
@@ -555,75 +589,94 @@ void SistemaDeVentas::VerProductos() {
         case 1:
         {
             for (int i = 0; i < productos.size(); i++) {
-                for (int j = 0; j < productos.size(); j++) {
-                    if (productos[j].get_stock() > productos[j + 1].get_stock()) {
-                        aux_ord_prod[0] = productos[j + 1];
-                        productos[j + 1] = productos[j];
-                        productos[j] = aux_ord_prod[0];
+                for (int j = 0; j < productos.size() - 1 ; j++) {
+                    if (productos[j].get_stock() > productos[j+1].get_stock()) {
+                        aux_ord_prod[j] = productos[j];
+                        productos[j] = productos[j+1];
+                        productos[j+1] = aux_ord_prod[j];
+                        //Ordenar presentación también
+                        aux_ord_pres[j] = presentaciones[j+1];
+                        presentaciones[j+1] = presentaciones[j];
+                        presentaciones[j] = aux_ord_pres[j];
                     }
                 }
             }
             for (int i = 0; i < productos.size(); i++) {
-                cout << i + 1 << ".- " << productos[i].get_name() << " con un stock de " << productos[i].get_stock() << endl;
+                cout << i + 1 << ".- " << presentaciones[i].getName() << " con un stock de " << productos[i].get_stock() << endl;
             }
             break;
         }
         case 2:
         {
             for (int i = 0; i < productos.size(); i++) {
-                for (int j = 0; j < productos.size(); j++) {
-                    if (productos[j].get_id() > productos[j + 1].get_id()) {
-                        aux_ord_prod[0] = productos[j + 1];
-                        productos[j + 1] = productos[j];
-                        productos[j] = aux_ord_prod[0];
+                for (int j = 0; j < productos.size() - 1 ; j++) {
+                    if (productos[j].get_id() > productos[j+1].get_id()) {
+                        aux_ord_prod[j] = productos[j];
+                        productos[j] = productos[j+1];
+                        productos[j+1] = aux_ord_prod[j];
+                        //Ordenar presentación también
+                        aux_ord_pres[j] = presentaciones[j+1];
+                        presentaciones[j+1] = presentaciones[j];
+                        presentaciones[j] = aux_ord_pres[j];
                     }
                 }
-            }
-            for (int i = 0; i < productos.size(); i++) {
-                cout << i + 1 << ".- " << productos[i].get_name() << ". ID: " << productos[i].get_id() << endl;
+            }            for (int i = 0; i < productos.size(); i++) {
+                cout << i + 1 << ".- " << presentaciones[i].getName() << ". ID: " << productos[i].get_id() << endl;
             }
             break;
         }
         case 3:
         {
             for (int i = 0; i < productos.size(); i++) {
-                for (int j = 0; j < productos.size(); j++) {
-                    if (productos[j].get_price() > productos[j + 1].get_price()) {
-                        aux_ord_prod[0] = productos[j + 1];
-                        productos[j + 1] = productos[j];
-                        productos[j] = aux_ord_prod[0];
+                for (int j = 0; j < productos.size() - 1 ; j++) {
+                    if (productos[j].get_price() > productos[j+1].get_price()) {
+                        aux_ord_prod[j] = productos[j];
+                        productos[j] = productos[j+1];
+                        productos[j+1] = aux_ord_prod[j];
+                        //Ordenar presentación también
+                        aux_ord_pres[j] = presentaciones[j+1];
+                        presentaciones[j+1] = presentaciones[j];
+                        presentaciones[j] = aux_ord_pres[j];
                     }
                 }
-            }
-            for (int i = 0; i < productos.size(); i++) {
-                cout << i + 1 << ".- " << productos[i].get_name() << " con un precio de $" << productos[i].get_price() << endl;
+            }            for (int i = 0; i < productos.size(); i++) {
+                cout << i+1 << ".- " << presentaciones[i].getName() << " con un precio de $" << productos[i].get_price() << endl;
             }
             break;
         }
         case 4:
         {
             for (int i = 0; i < productos.size(); i++) {
-                for (int j = 0; j < productos.size(); j++) {
-                    if (productos[j].get_price() > productos[j + 1].get_price()) {
-                        aux_ord_prod[0] = productos[j + 1];
-                        productos[j + 1] = productos[j];
-                        productos[j] = aux_ord_prod[0];
+                for (int j = 0; j < productos.size() - 1 ; j++) {
+                    if (productos[j].get_price() > productos[j+1].get_price()) {
+                        aux_ord_prod[j] = productos[j];
+                        productos[j] = productos[j+1];
+                        productos[j+1] = aux_ord_prod[j];
+                        //Ordenar presentación también
+                        aux_ord_pres[j] = presentaciones[j+1];
+                        presentaciones[j+1] = presentaciones[j];
+                        presentaciones[j] = aux_ord_pres[j];
                     }
                 }
             }
+            //Checar este despliegue de datos
             for (int i = productos.size(); i > 0; i--) {
-                cout << i << ".- " << productos[i].get_name() << " con un precio de $" << productos[i].get_price() << endl;
+                cout << i << ".- " << presentaciones[i].getName() << " con un precio de $" << productos[i].get_price() << endl;
             }
             break;
         }
         case 5:
         {
             for (int i = 0; i < productos.size(); i++) {
-                for (int j = 0; j < productos.size(); j++) {
-                    if (productos[j].get_cost() > productos[j + 1].get_cost()) {
-                        aux_ord_prod[0] = productos[j + 1];
-                        productos[j + 1] = productos[j];
-                        productos[j] = aux_ord_prod[0];
+                for (int j = 0; j < productos.size() - 1 ; j++) {
+                    if (productos[j].get_cost() > productos[j+1].get_cost()) {
+                        aux_ord_prod[j] = productos[j];
+                        productos[j] = productos[j+1];
+                        productos[j+1] = aux_ord_prod[j];
+                        //Ordenar presentación también
+                        aux_ord_pres[j] = presentaciones[j+1];
+                        presentaciones[j+1] = presentaciones[j];
+                        presentaciones[j] = aux_ord_pres[j];
                     }
                 }
             }
@@ -640,6 +693,10 @@ void SistemaDeVentas::VerProductos() {
                     aux_ord_prod[0] = productos[j + 1];
                     productos[j + 1] = productos[j];
                     productos[j] = aux_ord_prod[0];
+                    //Ordenar también a las presentaciones
+                    aux_ord_pres[0] = presentaciones[j+1];
+                    presentaciones[j+1] = presentaciones[j];
+                    presentaciones[j] = aux_ord_pres[0];
                 }
             }
         }
@@ -649,6 +706,8 @@ void SistemaDeVentas::VerProductos() {
     {
         int opc_fil;
         vector <Productos> aux_bus;
+        productos = leer_productos();
+        presentaciones = leer_presentaciones();
         cout << "\nFilter by: " << "\n1. Name" << "\n2. ID" << "\n3. UPC" << "\nOption: "; cin >> opc_fil;
         switch (opc_fil) {
         case 1:
@@ -661,7 +720,11 @@ void SistemaDeVentas::VerProductos() {
                 }
             }
             for (int j = 0; j < aux_bus.size(); j++) {
-                cout << j + 1 << ".- " << aux_bus[j].get_name() << endl;
+                for (int i  = 0; i < presentaciones.size(); i++) {
+                    if (aux_bus[j].get_id_presentation() == presentaciones[i].getID()) {
+                        cout << j+1 << ".- " << aux_bus[j].get_name() << ". ID: " << aux_bus[j].get_id() << endl;
+                    }
+                }
             }
             break;
         }
@@ -675,8 +738,13 @@ void SistemaDeVentas::VerProductos() {
                 }
             }
             for (int j = 0; j < aux_bus.size(); j++) {
-                cout << j + 1 << ".- " << aux_bus[j].get_name() << ". ID: " << aux_bus[j].get_id() << endl;
+                for (int i  = 0; i < presentaciones.size(); i++) {
+                    if (aux_bus[j].get_id_presentation() == presentaciones[i].getID()) {
+                        cout << j+1 << ".- " << aux_bus[j].get_name() << ". ID: " << aux_bus[j].get_id() << endl;
+                    }
+                }
             }
+
             break;
         }
         case 3:
@@ -689,8 +757,13 @@ void SistemaDeVentas::VerProductos() {
                 }
             }
             for (int j = 0; j < aux_bus.size(); j++) {
-                cout << j + 1 << ".- " << aux_bus[j].get_name() << endl;
+                for (int i  = 0; i < presentaciones.size(); i++) {
+                    if (aux_bus[j].get_id_presentation() == presentaciones[i].getID()) {
+                        cout << j+1 << ".- " << aux_bus[j].get_name() << ". ID: " << aux_bus[j].get_id() << endl;
+                    }
+                }
             }
+
             break;
         }
         }
@@ -707,6 +780,7 @@ void SistemaDeVentas::EliminarProducto() { //crear confirmaciones de delete
     }
     else {
         productos = SistemaDeVentas::leer_productos();
+        presentaciones = leer_presentaciones();
     }
     string upc;
     int band_prod = 0;
@@ -714,7 +788,16 @@ void SistemaDeVentas::EliminarProducto() { //crear confirmaciones de delete
     cin >> upc;
     for (int i = 0; i < productos.size(); i++) {
         if (upc == productos[i].get_UPC()) {
-            cout << productos[i].get_name() << " eliminado exitosamente" << endl;
+            for (int k = 0; k < presentaciones.size(); k++) {
+                if (productos[i].get_id_presentation() == presentaciones[k].getID()) {
+                    cout << presentaciones[k].getName() << " eliminado exitosamente" << endl;
+                }
+            }
+            for (int j = 0; j < presentaciones.size(); j++) {
+                if (productos[i].get_id_presentation() == presentaciones[j].getID()) {
+                    presentaciones.erase(presentaciones.begin() + j);
+                }
+            }
             productos.erase(productos.begin() + i);
             band_prod = 1;
             break;
@@ -724,12 +807,13 @@ void SistemaDeVentas::EliminarProducto() { //crear confirmaciones de delete
         cout << "El artÌculo no fue encontrado" << endl;
     }
     Actualizar_Productos();
+    Actualizar_Presentaciones();
 }
 
 void SistemaDeVentas::Actualizar_Productos() {
-    ofstream archivo_p(rutaProductos);
+    ofstream archivo_p(rutaProductos.c_str());
     for (int i = 0; i < productos.size(); i++) {
-        archivo_p << productos[i].get_UPC() << "," << productos[i].get_name() << "," << productos[i].get_id() << "," << productos[i].get_id_presentation() << "," << productos[i].get_price() << "," << productos[i].get_cost() << "," << productos[i].get_has_iva() << "," << productos[i].get_stock() << endl;
+        archivo_p << productos[i].get_name() << "," << productos[i].get_UPC() << "," << productos[i].get_id() << "," << productos[i].get_price() << "," << productos[i].get_cost() << "," << productos[i].get_has_iva() << "," << productos[i].get_stock() << "," << productos[i].get_id_presentation() << endl;
     }
     archivo_p.close();
 }
@@ -754,15 +838,22 @@ vector<Productos> SistemaDeVentas::leer_productos() {
             }
         }
         carga_productos.push_back(parte);
-        upc = carga_productos[0];
-        name = carga_productos[1];
+        name = carga_productos[0];
+        upc = carga_productos[1];
         id_u = stoi(carga_productos[2]);
-        id_p = stoi(carga_productos[3]);
-        price = stof(carga_productos[4]);
-        cost = stof(carga_productos[5]);
-        has_iva = stoi(carga_productos[6]);
-        stock = stoi(carga_productos[7]);
-        Productos guardado_productos = Productos(id_u, upc, name, id_p, price, cost, has_iva, stock);
+        price = stof(carga_productos[3]);
+        cost = stof(carga_productos[4]);
+        has_iva = stoi(carga_productos[5]);
+        stock = stoi(carga_productos[6]);
+        id_p = stoi(carga_productos[7]);
+        presentaciones = leer_presentaciones();
+        string nombre_p;
+        int id_pr = 0;
+        for (int i = 0; i < presentaciones.size(); i++) {
+            id_pr = presentaciones[i].getID();
+            nombre_p = presentaciones[i].getName();
+        }
+        Productos guardado_productos = Productos(id_u, upc, name, id_p, price, cost, has_iva, stock, id_pr, nombre_p);
         guardado_productos.set_id(id_u);
         guardado_productos.set_UPC(upc);
         guardado_productos.set_name(name);
@@ -771,11 +862,40 @@ vector<Productos> SistemaDeVentas::leer_productos() {
         guardado_productos.set_cost(cost);
         guardado_productos.set_has_iva(has_iva);
         guardado_productos.set_stock(stock);
+        guardado_productos.setID(id_pr);
+        guardado_productos.setName(nombre_p);
         productos1.push_back(guardado_productos);
     }
     return productos1;
 }
-
+vector <Presentacion> SistemaDeVentas::leer_presentaciones(){
+    vector<Presentacion> presentaciones1;
+    ifstream lectura_presentaciones(rutaPresentaciones.c_str());
+    string linea_p;
+    while (getline(lectura_presentaciones, linea_p)) {
+        vector <string> carga_presentaciones;
+        string parte_p;
+        string name_p;
+        int id_p_pcsv;
+        for (int i = 0; i < linea_p.size(); i++) {
+            if (linea_p[i] == ',') {
+                carga_presentaciones.push_back(parte_p);
+                parte_p = "";
+            }
+            else{
+                parte_p += linea_p[i];
+            }
+        }
+        carga_presentaciones.push_back(parte_p);
+        id_p_pcsv = stoi(carga_presentaciones[0]);
+        name_p = carga_presentaciones[1];
+        Presentacion lectura_pr = Presentacion(id_p_pcsv, name_p);
+        lectura_pr.setID(id_p_pcsv);
+        lectura_pr.setName(name_p);
+        presentaciones1.push_back(lectura_pr);
+    }
+    return presentaciones1;
+}
 void SistemaDeVentas::GestionDeUsuarios()
 {
     // Variable para almacenar la opciÛn seleccionada por el usuario
@@ -1028,7 +1148,7 @@ void SistemaDeVentas::EliminarUsuario()
 void SistemaDeVentas::GestionDeClientes() {
     int opc_cli;
     do {
-        cout << "\nBienvenido al Men˙ de Clientes: " << "\n1. Add Client" << "\n2. Edit Client" << "\n3. See Clients" << "\n4. Delete Client" << "\n5.Return" << "\nOption: "; cin >> opc_cli;
+        cout << "\nBienvenido al Men˙ de Clientes: " << "\n1. Add Client" << "\n2. Edit Client" << "\n3. See Clients" << "\n4. Delete Client" << "\n5. Return" << "\nOption: "; cin >> opc_cli;
         switch (opc_cli) {
         case 1:
         {
@@ -1074,8 +1194,8 @@ void SistemaDeVentas::AgregarCliente() { //Corregir con cin.ignore()
         int cant_client_reg = clientes.size();
         actual_id_cliente = clientes[cant_client_reg - 1].getID();
     }
-    string name, rfc, address, city, state, zipcode;
-    int id_c, reg_fis_id;
+    string name, rfc, address, city, state, zipcode, name_reg_fis;
+    int code_reg_fis;
     ofstream archivo_clientes(rutaClientes, ios::app);
     cout << "\nType the client¥s name: "; cin >> name; archivo_clientes << name << ",";
     cout << "Type the rfc of " << name << ": "; cin >> rfc; archivo_clientes << rfc << ",";
@@ -1083,9 +1203,13 @@ void SistemaDeVentas::AgregarCliente() { //Corregir con cin.ignore()
     cout << "Type the city where " << name << " lives: "; cin >> city; archivo_clientes << city << ",";
     cout << "Type the state where " << name << " lives: "; cin >> state; archivo_clientes << state << ",";
     cout << "Type the zipcode where " << address << " is located: "; cin >> zipcode; archivo_clientes << zipcode << ",";
-    cout << "Type the ID for the 'fiscal register' of " << name << ": "; cin >> reg_fis_id; archivo_clientes << reg_fis_id << ",";
+    cout << "The ID for the 'fiscal register' of " << name << " is: " << actual_id_cliente + 1; archivo_clientes << actual_id_cliente + 1 << ",";
+    ofstream archivo_regimenes(rutaRegimenesFiscales, ios::app);
+    archivo_regimenes << actual_id_cliente + 1 << ",";
+    cout << "\nType the code of the fiscal register of " << name << ": "; cin >> code_reg_fis; archivo_regimenes << code_reg_fis << ",";
+    cout << "Type the name of the fiscal register of " << name << ": "; cin.ignore(); getline(cin, name_reg_fis); archivo_regimenes << name_reg_fis << endl;
     cout << "The assigned id for " << name << " is " << actual_id_cliente + 1; archivo_clientes << actual_id_cliente + 1 << endl;
-    Clientes nuevoCliente = Clientes(actual_id_cliente, name, rfc, reg_fis_id, address, city, state, zipcode);
+    Clientes nuevoCliente = Clientes(actual_id_cliente, name, rfc, actual_id_cliente, address, city, state, zipcode, actual_id_cliente, code_reg_fis, name_reg_fis );
     clientes.push_back(nuevoCliente);
     archivo_clientes.close();
 }
@@ -1153,15 +1277,52 @@ void SistemaDeVentas::EditarCliente() {
     }
     case 7:
     {
-        int new_fiscal_regimen;
-        cout << "Type the new fiscal regimen of " << clientes[opc_cli_edit - 1].getName() << ": "; cin >> new_fiscal_regimen;
-        clientes[opc_cli_edit - 1].setRegimenFiscalID(new_fiscal_regimen);
+        int opc_edit_reg;
+        cout << "1. Edit Fiscal Regimen Code " << "\n2. Edit Fiscal Regimen Name" << "\nOption: "; cin >> opc_edit_reg;
+        switch(opc_edit_reg){
+            case 1:
+            {
+                int new_code;
+                cout << "Type the new code: "; cin >> new_code;
+                //clientes[opc_cli_edit-1].setCode(new_code);
+                for (int j = 0; j < regimenesFiscales.size(); j++) {
+                    if (clientes[opc_cli_edit-1].getID() == regimenesFiscales[j].getID()) {
+                        regimenesFiscales[j].setCode(new_code);
+                    }
+                }
+                Actualizar_Regimenes();
+                break;
+            }
+            case 2:
+            {
+                string new_name;
+                cout << "Type the new name: "; cin.ignore(); getline(cin , new_name);
+                clientes[opc_cli_edit-1].RegimenFiscal::setName(new_name);
+                for (int j = 0; j < regimenesFiscales.size(); j++) {
+                    if (clientes[opc_cli_edit-1].getID() == regimenesFiscales[j].getID()) {
+                        regimenesFiscales[j].setName(new_name);
+                    }
+                }
+                Actualizar_Regimenes();
+                break;
+            }
+            default:
+            {
+                cout << "Introduzca una opción válida" << endl;
+                break;
+            }
+        }
         break;
     }
     }
     Actualizar_Clientes();
 }
-
+void SistemaDeVentas::Actualizar_Regimenes(){
+    ofstream archivo_regimenes(rutaRegimenesFiscales.c_str());
+    for (int i  = 0; i < regimenesFiscales.size(); i++) {
+        archivo_regimenes << regimenesFiscales[i].getID() << "," << regimenesFiscales[i].getCode() << "," << regimenesFiscales[i].getName() << endl;
+    }
+}
 void SistemaDeVentas::VerClientes() {
     ifstream archivo_cl(rutaClientes.c_str());
     if (!archivo_cl) {
@@ -1257,7 +1418,7 @@ void SistemaDeVentas::EliminarCliente() {
 void SistemaDeVentas::Actualizar_Clientes() {
     ofstream archivo_clientes(rutaClientes);
     for (int i = 0; i < clientes.size(); i++) {
-        archivo_clientes << clientes[i].getName() << "," << clientes[i].getRFC() << "," << clientes[i].getAddress() << "," << clientes[i].getCity() << "," << clientes[i].getState() << "," << clientes[i].getZipCode() << "," << clientes[i].getRegimenFiscalID() << "," << clientes[i].getID() << endl;
+        archivo_clientes << clientes[i].getName() << "," << clientes[i].getRFC() << "," << clientes[i].getAddress() << "," << clientes[i].getCity() << "," << clientes[i].getState() << "," << clientes[i].getZipCode() << "," << clientes[i].getID() << "," << clientes[i].RegimenFiscal::getID() << endl;
     }
     archivo_clientes.close();
 }
@@ -1267,8 +1428,8 @@ vector<Clientes> SistemaDeVentas::leer_clientes() {
     ifstream lectura_clientes(rutaClientes.c_str());
     string linea;
     while (getline(lectura_clientes, linea)) {
-        string name, rfc, address, city, state, zipcode;
-        int id_c, reg_fis_id;
+        string name, rfc, address, city, state, zipcode, name_reg_fis;
+        int id_c, reg_fis_id, code_reg_fis;
         vector<string> carga_clientes;
         string parte;
         for (int i = 0; i < linea.size(); i++) {
@@ -1289,7 +1450,14 @@ vector<Clientes> SistemaDeVentas::leer_clientes() {
         zipcode = carga_clientes[5];
         reg_fis_id = stoi(carga_clientes[6]);
         id_c = stoi(carga_clientes[7]);
-        Clientes cliente_guardado = Clientes(id_c, name, rfc, reg_fis_id, address, city, state, zipcode);
+        regimenesFiscales = leer_regimenes_fiscales();
+        for (int j = 0; j < regimenesFiscales.size(); j++) { //buscando el id en el objeto de regimenes para asignar los correctos
+            if (reg_fis_id == regimenesFiscales[j].getID()) {
+                code_reg_fis = regimenesFiscales[j].getCode();
+                name_reg_fis = regimenesFiscales[j].getName();
+            }
+        }
+        Clientes cliente_guardado = Clientes(id_c, name, rfc, reg_fis_id, address, city, state, zipcode, reg_fis_id, code_reg_fis, name_reg_fis);
         cliente_guardado.setID(id_c);
         cliente_guardado.setName(name);
         cliente_guardado.setRFC(rfc);
@@ -1302,13 +1470,42 @@ vector<Clientes> SistemaDeVentas::leer_clientes() {
     }
     return clientes1;
 }
-
+vector <RegimenFiscal> SistemaDeVentas::leer_regimenes_fiscales(){
+    vector<RegimenFiscal> regimenes;
+    ifstream lectura_regimenes(rutaRegimenesFiscales.c_str());
+    string linea;
+    while (getline(lectura_regimenes, linea)) {
+        string nombre_reg;
+        int id, cod;
+        vector <string> carga_regimenes;
+        string parte;
+        for (int i = 0; i < linea.size(); i++) {
+            if (linea[i] == ',') {
+                carga_regimenes.push_back(parte);
+                parte = "";
+            }
+            else{
+                parte += linea[i];
+            }
+        }
+        carga_regimenes.push_back(parte);
+        id = stoi(carga_regimenes[0]);
+        cod = stoi(carga_regimenes[1]);
+        nombre_reg = carga_regimenes[2];
+        RegimenFiscal traslado_regimen = RegimenFiscal(id, cod, nombre_reg);
+        traslado_regimen.setID(id);
+        traslado_regimen.setCode(cod);
+        traslado_regimen.setName(nombre_reg);
+        regimenes.push_back(traslado_regimen);
+    }
+    return regimenes;
+}
 void SistemaDeVentas::GestionDeVentas()
 {
 	int opcionGV = 0;
 	do {
 		LimpiarPantalla();
-		cout << "Bienvenido al men˙ de Ventas" << endl;
+		cout << "Bienvenido al menú de Ventas" << endl;
 		cout << "1. Agregar Venta" << endl
 			<< "2. Ver Ventas" << endl
 			<< "3. Return" << endl
@@ -1748,7 +1945,7 @@ DateTime SistemaDeVentas::ConvertirFechaADateTime()
     DateTime dateAux;
     time_t now = time(0);
     tm localTime;
-    localtime_s(&localTime, &now);
+    //localtime_s(&localTime, &now);
     dateAux.year = 1900 + localTime.tm_year;
     dateAux.month = 1 + localTime.tm_mon;
     dateAux.day = localTime.tm_mday;
