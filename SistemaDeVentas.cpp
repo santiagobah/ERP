@@ -1541,7 +1541,29 @@ void SistemaDeVentas::GestionDeVentas()
 
 void SistemaDeVentas::AgregarVenta()
 {
-
+    int id_sale = 0;
+    int id_num_prod_vendido = 0;
+    int quantity_same_product = 0;
+    int num_prod = 0;
+    string upc_producto_vendido;
+    productos = leer_productos();
+    presentaciones = leer_presentaciones();
+    cout << "Type 0 when you want to end, start scanning now: \n" << endl;
+    do {
+        getline(cin, upc_producto_vendido);
+        for (int i = 0; i < productos.size(); i++) {
+            if (upc_producto_vendido == productos[i].get_UPC()) {
+                for (int j = 0; j < presentaciones.size(); j++) {
+                    if (productos[i].get_id_presentation() == presentaciones[j].getID()) {
+                        cout << presentaciones[j].getName() << " --- $" << productos[i].get_price()  << "\n" << endl;
+                    }
+                }
+            }
+            
+            num_prod = i;
+        }
+        ProductosVendidos nuevoProductoVendido = ProductosVendidos(id_num_prod_vendido, id_sale, productos[num_prod].get_id(), quantity_same_product, productos[num_prod].get_price());
+    } while (upc_producto_vendido != "0");
 }
 
 void SistemaDeVentas::VerVentas()
@@ -1945,7 +1967,7 @@ DateTime SistemaDeVentas::ConvertirFechaADateTime()
     DateTime dateAux;
     time_t now = time(0);
     tm localTime;
-    localtime_s(&localTime, &now);
+    //localtime_s(&localTime, &now);
     dateAux.year = 1900 + localTime.tm_year;
     dateAux.month = 1 + localTime.tm_mon;
     dateAux.day = localTime.tm_mday;
