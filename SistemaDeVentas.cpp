@@ -947,6 +947,7 @@ void SistemaDeVentas::GestionDeUsuarios()
 }
 
 void SistemaDeVentas::AgregarUsuario()
+
 {
     usuarios = LeerUsuarios();
     string name, surname, username, password, role;
@@ -1541,13 +1542,241 @@ void SistemaDeVentas::GestionDeVentas()
 
 void SistemaDeVentas::AgregarVenta()
 {
+    clientes = leer_clientes();
+    int cliente_actual = 0;
+    cout << "\nSeleccione al cliente actual: " << endl;
+    for (int i = 0; i < clientes.size(); i++) {
+        cout << i + 1 << ".- " << clientes[i].getName() << ". ID: " << clientes[i].getID() << endl;
+    }
+    cout << "Opci—n: "; cin >> cliente_actual;
+    productos = leer_productos();
+    presentaciones = leer_presentaciones();
+    //Siempre hay que leer los productos y presentaciones porque sino marca error
+    ifstream archivo_ventas(rutaProductosVendidos.c_str());
+    int id_sale = 0;
+    int id_num_prod_vendido = 0;
+    int quantity_same_product = 0;
+    string upc_producto_vendido = "";
+    if (!archivo_ventas) {
+        ofstream archivo_productos_vendidos(rutaProductosVendidos.c_str());
+    }
+    else{
+        productosVendidos = LeerProductosVendidos();
+        int tam_prod_vend = productosVendidos.size();
+        id_sale = productosVendidos[tam_prod_vend-1].getID_Sale();
+    }
+    id_sale ++; //Va creciendo el id cada que hay un nuevo registro de venta
+    int id_producto_vendido;
+    float precio_unidad;
+    float total_compra;
+    vector <ProductosVendidos> compras_actuales;
+    ofstream productos_vendidos(rutaProductosVendidos.c_str(), ios::app);
+    cout << "Type 0 when you want to end, start scanning now: \n" << endl;
+    do {
+        int iterador_p_borrar;
+        int band_dup = 0;
+        int unidades_producto_vendido = 0;
+        getline(cin, upc_producto_vendido);
+        for (int i = 0; i < productos.size(); i++) {
+            if (upc_producto_vendido == productos[i].get_UPC()) {
+                unidades_producto_vendido++;//El cliente lleva al menos un art’culo del encontrado
+                for (int j = 0; j < presentaciones.size(); j++) {
+                    if (productos[i].get_id_presentation() == presentaciones[j].getID()) {
+                        cout << presentaciones[j].getName() << " --- $" << productos[i].get_price()  << "\n" << endl;
+                        id_producto_vendido = productos[i].get_id();
+                        precio_unidad = productos[i].get_price();
+                        if (productosVendidos.size() >= 1) {
+                            int cant_prod_vend = productosVendidos.size();
+                            id_num_prod_vendido = productosVendidos[cant_prod_vend-1].getID() + 1;
+                        }
+                        else{
+                            id_num_prod_vendido++;
+                        }
+                        for (int m = 0; m < compras_actuales.size(); m++) {
+                            if (id_producto_vendido == compras_actuales[m].getID_Product()) {
+                                unidades_producto_vendido++;
+                                band_dup = 1;
+                            }
+                        }
+                        ProductosVendidos nuevoProductoVendido = ProductosVendidos(id_num_prod_vendido, id_sale, id_producto_vendido, unidades_producto_vendido, precio_unidad);
+                        nuevoProductoVendido.setID_Sale(id_sale);
+                        nuevoProductoVendido.setQuantity(unidades_producto_vendido);
+                        nuevoProductoVendido.setID(id_num_prod_vendido);
+                        nuevoProductoVendido.setID_Product(id_producto_vendido);
+                        nuevoProductoVendido.setSalePricePerUnit(precio_unidad);
+                        compras_actuales.push_back(nuevoProductoVendido);
+                        if (band_dup == 0) {
+                            productosVendidos.push_back(nuevoProductoVendido);//Vector auxiliar para ver si ya se hab’a llevado ese producto en la misma compra/venta
+                        }
+                        
+                        for (int ii = 0; ii < compras_actuales.size(); ii++) {
+                            if (id_sale == productosVendidos[ii].getID_Sale()) {
+                                if (id_producto_vendido == productosVendidos[ii].getID_Product()) {
+                                    productosVendidos[ii].setQuantity(unidades_producto_vendido);
+                                }
+                            }
+                        }
+                        productos_vendidos << id_num_prod_vendido << "," << id_sale << "," << id_producto_vendido  << "," << unidades_producto_vendido  << "," << precio_unidad << endl;
+                        total_compra += precio_unidad;
+                        break;
+                    }
+                }
+            }
+        }
+    } while (upc_producto_vendido != "0");
+    cout << "El total de la compra es de  $" << total_compra << endl;
+    Actualizar_Productos_Vendidos();
+    productos_vendidos.close();
+    int usuario_actual_id = usuarioActual->getId();
+    DateTime fecha_venta = ConvertirFechaADateTime();
+    int cliente_actual_id = clientes[cliente_actual-1].getID();
+    //Registrar esta venta:
+    Ventas nuevaVenta = Ventas(id_sale, fecha_venta, usuario_actual_id, cliente_actual_id, total_compra);
+    nuevaVenta.setID(id_sale);
+    nuevaVenta.setDateOfSale(fecha_venta);
+    nuevaVenta.setUserID(usuario_actual_id);
+    nuevaVenta.setClientID(cliente_actual_id);
+    nuevaVenta.setTotal(total_compra);
+    ventas_vector.push_back(nuevaVenta);
+    ofstream archivo_venta(rutaVentas.c_str());
+    for (int i = 0; i < ventas_vector.size(); i++) {
+        archivo_venta << ventas_vector[i].getID() << "," << ventas_vector[i].getDateOfSale().year << "," << ventas_vector[i].getDateOfSale().month << "," << ventas_vector[i].getDateOfSale().day << "," << ventas_vector[i].getDateOfSale().hour << "," << ventas_vector[i].getDateOfSale().minute << "," << ventas_vector[i].getDateOfSale().second  << "," << ventas_vector[i].getUserID() << "," << ventas_vector[i].getClientID() << "," << ventas_vector[i].getTotal() << endl;
+    }
+    archivo_venta.close();
+}
+vector<ProductosVendidos> SistemaDeVentas::LeerProductosVendidos(){
+    vector <ProductosVendidos> pven1;
+    ifstream lectura_productos_vendidos(rutaProductosVendidos.c_str());
+    string linea;
+    while (getline(lectura_productos_vendidos, linea)) {
+        int id, id_venta, id_producto, cantidad_prod;
+        float precio;
+        vector <string> carga_productos_vendidos;
+        string parte;
+        for (int i  = 0; i < linea.size(); i++) {
+            if (linea[i] == ',') {
+                carga_productos_vendidos.push_back(parte);
+                parte = "";
+            }
+            else{
+                parte += linea[i];
+            }
+        }
+        carga_productos_vendidos.push_back(parte);
+        id = stoi(carga_productos_vendidos[0]);
+        id_venta = stoi(carga_productos_vendidos[1]);
+        id_producto = stoi(carga_productos_vendidos[2]);
+        cantidad_prod = stoi(carga_productos_vendidos[3]);
+        precio = stof(carga_productos_vendidos[4]);
+        ProductosVendidos producto_vendido = ProductosVendidos(id, id_venta, id_producto, cantidad_prod, precio);
+        pven1.push_back(producto_vendido);
+    }
+    return pven1;
+}
 
+void SistemaDeVentas::Actualizar_Productos_Vendidos(){
+    ofstream archivo_productos_vendidos(rutaProductosVendidos.c_str());
+    for (int i  = 0; i < productosVendidos.size(); i++) {
+        archivo_productos_vendidos << productosVendidos[i].getID() << "," << productosVendidos[i].getID_Sale() << "," << productosVendidos[i].getID_Product() << "," << productosVendidos[i].getQuantity() << "," << productosVendidos[i].getSalePricePerUnit() << endl;
+    }
 }
 
 void SistemaDeVentas::VerVentas()
 {
-
+    ventas_vector = LeerVentas();
+    int opc_ventas;
+    cout << "Sales: " << "\n1. See all sales" << "\n2. Filter by date" << "\n3. Filter by client" << "\n4. Filter by seller" << "\nOption: "; cin >> opc_ventas;
+    switch(opc_ventas){
+        case 1:
+        {
+            for (int i = 0; i < ventas_vector.size(); i++) {
+                cout << i+1 << ".- Venta realizada para el cliente " << ventas_vector[i].getClientID() << " por un monto de $" << ventas_vector[i].getTotal() << endl;
+            }
+            break;
+        }
+        case 2:
+        {
+            vector <Ventas> aux_ventas;
+            aux_ventas = ventas_vector;
+            for (int i = 0; i < ventas_vector.size(); i++) {
+                for (int j = 0; j < ventas_vector.size() - 1; j++) {
+                    if (ventas_vector[j].getDateOfSale().day >  ventas_vector[j+1].getDateOfSale().day) {
+                        aux_ventas[j] = ventas_vector[j];
+                        ventas_vector[j] = ventas_vector[j+1];
+                        ventas_vector[j+1] = aux_ventas[j];
+                    }
+                }
+            }
+            for (int i = 0; i < ventas_vector.size(); i++) {
+                cout << "Venta " << i+1 << " para " << ventas_vector[i].getClientID() << " en " << ventas_vector[i].getDateOfSale().day << endl;
+            }
+            
+            break;
+        }
+        case 3:
+        {
+            int opc_cliente;
+            cout << "Type the ID for the client you want to see the sales " << endl;
+            for (int i = 0; i < clientes.size(); i++) {
+                cout << i+1 << ".- " << clientes[i].getName() << ". ID: " << clientes[i].getID() << endl;
+            }
+            cout << "Option: "; cin >> opc_cliente;
+            for (int i = 0; i < clientes.size(); i++) {
+                if (opc_cliente == clientes[i].getID()) {
+                    for (int j = 0; j < ventas_vector.size(); j++) {
+                        if (clientes[i].getID() == ventas_vector[j].getClientID()) {
+                            cout << "Sale for " << ventas_vector[j].getTotal() << " on "  << ventas_vector[j].getDateOfSale().year << endl;
+                        }
+                    }
+                }
+            }
+            break;
+        }
+        case 4:
+        {
+            cout << "Sales by seller" << endl;
+            break;
+        }
+    }
 }
+
+vector<Ventas> SistemaDeVentas::LeerVentas(){
+    vector <Ventas> ventas1;
+    DateTime dateJoined;
+    ifstream archivo_ventas(rutaVentas.c_str());
+    string linea;
+    int day, month, year, hour, minute, second;
+    while (getline(archivo_ventas, linea)) {
+        int id_v, usuario_actual_id, cliente_actual_id;
+        float total_compra;
+        vector <string> carga_ventas;
+        string parte;
+        for (int i = 0; i < linea.size(); i++) {
+            if (linea[i] == ',') {
+                carga_ventas.push_back(parte);
+                parte =  "";
+            }
+            else{
+                parte += linea[i];
+            }
+        }
+        id_v = stoi(carga_ventas[0]);
+        year = stoi(carga_ventas[1]);
+        month = stoi(carga_ventas[2]);
+        day = stoi(carga_ventas[3]);
+        hour = stoi(carga_ventas[4]);
+        minute = stoi(carga_ventas[5]);
+        second = stoi(carga_ventas[6]);
+        dateJoined = DateTime{ year, month, day, hour, minute, second };
+        usuario_actual_id = stoi(carga_ventas[7]);
+        cliente_actual_id = stoi(carga_ventas[8]);
+        total_compra = stof(carga_ventas[9]);
+        Ventas venta = Ventas(id_v, dateJoined, usuario_actual_id, cliente_actual_id, total_compra);
+        ventas1.push_back(venta);
+    }
+    return ventas1;
+}
+
 
 void SistemaDeVentas::GestionDeInformes()
 {

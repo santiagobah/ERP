@@ -55,7 +55,7 @@ private:
     vector<Presentacion> presentaciones;
     vector <Presentacion> leer_presentaciones();
     string rutaProductos;
-
+    
     //Usuarios:
     void GestionDeUsuarios();
     void AgregarUsuario();
@@ -81,7 +81,11 @@ private:
     void GestionDeVentas();
     void AgregarVenta();
     void VerVentas();
-    vector<Ventas> ventas;
+    vector<Ventas> ventas_vector;
+    vector<ProductosVendidos> productosVendidos;
+    vector<Ventas> LeerVentas();
+    vector<ProductosVendidos> LeerProductosVendidos();
+    void Actualizar_Productos_Vendidos();
 
     //Informes:
     void GestionDeInformes();
@@ -102,18 +106,13 @@ private:
     void PausaConEnter();
     void LimpiarPantalla();
 
-    /*vector<Clientes> LeerClientes();
-     vector<Productos> LeerProductos();
-     vector<Ventas> LeerVentas();
-     vector<ProductosVendidos> LeerProductosVendidos();
-
+    /*
      void GuardarUsuarios(vector<Usuarios> usuarios);
      void GuardarClientes(vector<Clientes> clientes);
      void GuardarProductos(vector<Productos> productos);
      void GuardarVentas(vector<Ventas> ventas);
      void GuardarProductosVendidos(vector<ProductosVendidos> productosVendidos);*/
 
-    vector<ProductosVendidos> productosVendidos;
     string rutaUsuarios;
     string rutaVentas;
     string rutaProductosVendidos;
