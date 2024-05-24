@@ -53,7 +53,7 @@ private:
     vector<Productos> productos;
     vector<Productos> leer_productos();
     vector<Presentacion> presentaciones;
-    vector <Presentacion> leer_presentaciones();
+    vector<Presentacion> leer_presentaciones();
     string rutaProductos;
 
     //Usuarios:
@@ -71,17 +71,22 @@ private:
     void EliminarCliente();
     void Actualizar_Clientes();
     void Actualizar_Regimenes();
-    vector <RegimenFiscal> leer_regimenes_fiscales();
+    vector<RegimenFiscal> regimenesFiscales;
+    vector<RegimenFiscal> leer_regimenes_fiscales();
     vector<Clientes> clientes;
     vector<Clientes> leer_clientes();
     string rutaClientes;
-    vector<RegimenFiscal> regimenesFiscales;
 
     //Ventas:
     void GestionDeVentas();
     void AgregarVenta();
     void VerVentas();
-    vector<Ventas> ventas;
+    vector<Ventas> ventas_vector;
+    vector<ProductosVendidos> productosVendidos;
+    vector<Ventas> LeerVentas();
+    vector<ProductosVendidos> LeerProductosVendidos();
+    void Actualizar_Productos_Vendidos();
+
 
     //Informes:
     void GestionDeInformes();
@@ -91,6 +96,9 @@ private:
     void MenuInformesAlmacen();
     void InformeDeVentas();
     void InformeDeInventarios();
+    void InformeProductosConMayorInventario();
+    void InformeProductosConCeroInventario();
+    void InformeProductosResurtir();
     void InfromesDeActividadDeUsuarios();
     void InformeFiltroPorAccion(vector<RegistroDeActividadUser>& registros);
     void RegistroDeActividad(string action);
@@ -102,8 +110,8 @@ private:
     void PausaConEnter();
     void LimpiarPantalla();
 
-    /*
-     
+    /*vector<Clientes> LeerClientes();
+     vector<Productos> LeerProductos();
      vector<Ventas> LeerVentas();
      vector<ProductosVendidos> LeerProductosVendidos();
 
@@ -113,14 +121,13 @@ private:
      void GuardarVentas(vector<Ventas> ventas);
      void GuardarProductosVendidos(vector<ProductosVendidos> productosVendidos);*/
 
-    vector<ProductosVendidos> productosVendidos;
+  
     string rutaUsuarios;
     string rutaVentas;
     string rutaProductosVendidos;
     string rutaPresentaciones;
     string rutaRegimenesFiscales;
     string rutaRegistrosUsuarios;
-
     Usuarios* usuarioActual;
 };
 /*

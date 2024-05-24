@@ -60,14 +60,14 @@ int Usuarios::getRoleInt()
         return 1;
     }
     else if (_role == "Vendedor") {
-        return 2;
-    }
+		return 2;
+	}
     else if (_role == "RH") {
-        return 3;
-    }
+		return 3;
+	}
     else if (_role == "Almacen") {
-        return 4;
-    }
+		return 4;
+	}
     else
     {
        return 0;
@@ -88,7 +88,7 @@ DateTime Usuarios::getDateJoined()
 
 string Usuarios::Encrypt(string password)
 {
-    //Obtiene hash por medio de los c—digos ascii
+    //Obtiene hash por medio de los códigos ascii
     unsigned int hash = 0;
     for (int i = 0; i < password.length(); ++i) {
         hash = hash * 37 + password[i];
@@ -97,4 +97,5 @@ string Usuarios::Encrypt(string password)
     string final = to_string(hashInt);
     return final;
 }
+
 

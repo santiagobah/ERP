@@ -3,14 +3,15 @@
 #include <string>
 #include <fstream>
 #include <vector>
+#include "Presentacion.h"
 using namespace std;
 
-class Productos
+class Productos : public Presentacion
 {
 public:
-	Productos(int id_unique, string UPC, string name, int id_presentation, float price, float cost, bool has_iva, int stock);
-	~Productos();
-    
+    Productos(int id_unique, string UPC, string name, int id_presentation, float price, float cost, bool has_iva, int stock, int id_p, string name_p);
+    ~Productos();
+
     void set_id(int id_unique);
     void set_UPC(string UPC);
     void set_name(string name);
@@ -19,7 +20,7 @@ public:
     void set_cost(float cost);
     void set_has_iva(bool has_iva);
     void set_stock(int stock);
-    
+
     int get_id();
     string get_UPC();
     string get_name();
@@ -28,7 +29,7 @@ public:
     float get_cost();
     bool get_has_iva();
     int get_stock();
-    
+
 private:
     int _id_unique;
     string _UPC;

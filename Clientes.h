@@ -7,10 +7,10 @@
 
 using namespace std;
 
-class Clientes
+class Clientes : public RegimenFiscal
 {
 public:
-	Clientes(int ID, string Name, string RFC, int RegimenFiscalID, string Address, string City, string State, string ZipCode);
+	Clientes(int ID, string Name, string RFC, int RegimenFiscalID, string Address, string City, string State, string ZipCode, int id_reg, int code_reg, string name_reg);
 	~Clientes();
 
 	void setID(int ID);

@@ -1,4 +1,4 @@
-//Main
+	//Main
 //	Crear objeto de Sistema de Ventas
 //	Ejecutar MenuInicial()
 //SistemaDeVentas

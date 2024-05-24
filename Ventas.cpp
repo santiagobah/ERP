@@ -1,6 +1,6 @@
 #include "Ventas.h"
 
-Ventas::Ventas(int ID, DateTimeV DateOfSale, int userID, int clientID, float total)
+Ventas::Ventas(int ID, DateTime DateOfSale, int userID, int clientID, float total)
 {
 	_ID = ID;
 	_DateOfSale = DateOfSale;
@@ -23,12 +23,12 @@ int Ventas::getID()
 	return _ID;
 }
 
-void Ventas::setDateOfSale(DateTimeV DateOfSale)
+void Ventas::setDateOfSale(DateTime DateOfSale)
 {
 	_DateOfSale = DateOfSale;
 }
 
-DateTimeV Ventas::getDateOfSale()
+DateTime Ventas::getDateOfSale()
 {
 	return _DateOfSale;
 }
