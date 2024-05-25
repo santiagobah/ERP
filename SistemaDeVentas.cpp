@@ -430,8 +430,7 @@ void SistemaDeVentas::GestionDeProductos() {
     } while (opc_men_pod != 5);
 }
 
-void SistemaDeVentas::AgregarProducto() { //Crear excepciones por si aún no se crea el archivo de productos
-    //Hacer que ID vaya creciendo
+void SistemaDeVentas::AgregarProducto() { //Crear excepciones por si a˙n no se crea el archivo de productos
     //Hacer que ID vaya creciendo
     int id_u_actual; //Para hacer ID's consecutivos
     int id_p_actual; //Para hacer ID's consecutivos
@@ -442,36 +441,45 @@ void SistemaDeVentas::AgregarProducto() { //Crear excepciones por si aún no se 
         id_p_actual = 0;
     }
     else {
-        productos = SistemaDeVentas::leer_productos(); //Para que inicie el vector ya cargado con los productos que estén ya registrados
+        productos = SistemaDeVentas::leer_productos(); //Para que inicie el vector ya cargado con los productos que estÈn ya registrados
         int cant_prod_reg = productos.size();
         id_u_actual = productos[cant_prod_reg - 1].get_id();
-        id_p_actual = presentaciones[cant_prod_reg - 1].getID();
+        id_p_actual = presentaciones[cant_prod_reg-1].getID();
     }
     ofstream archivo_productos(rutaProductos, ios::app);
     string upc, name;
     float price, cost;
     bool has_iva;
     int stock;
-
-    //    cout << "The  ID for this " << name << " presentation is going to be: " << id_p_actual + 1 << endl; archivo_productos << id_p_actual + 1 << ",";
     string first_part_name;
     int n_presentations = 0;
     cout << "Type the main name of the new product: "; cin.ignore(); getline(cin, first_part_name);
     cout << "How many presentations are there for " << first_part_name << "? "; cin >> n_presentations;
     for (int i = 0; i < n_presentations; i++) {
-        archivo_productos << first_part_name << ",";
         ofstream presentaciones_productos(rutaPresentaciones.c_str(), ios::app);
-        cout << "\nAdd something to this name to create a unique name for presentation " << i + 1 << " of " << first_part_name << ": ";
-        cin.ignore(); getline(cin, name); name = first_part_name + " " + name;
-        cout << "\nScan the barcode of " << name << ": ";
-        cin >> upc; archivo_productos << upc << ",";
+        cout << "\nAdd something to this name to create a unique name for presentation " << i+1 << " of " << first_part_name << ": " ;
+        cin.ignore(); getline(cin, name); name = first_part_name +  " " + name;
+        cout << "\nScan the barcode of " << name << ": "; cin >> upc;
+        int band_prod_rep = 0;
+        for (int j = 0; j < productos.size(); j++) {
+            if (upc == productos[j].get_UPC()) {
+                cout << "Este producto ya ha sido registrado anteriormente" << endl;
+                band_prod_rep = 1;
+                break;
+            }
+        }
+        if (band_prod_rep == 1) {
+            break;
+        }
+        archivo_productos << first_part_name << ","; //Comenzamos a escribir en el csv hasta haber pasado la validación de que el producto ya existía
+        archivo_productos << upc << ",";
         cout << "\nThe unique ID for " << name << " is going to be: " << id_u_actual + 1 << endl; archivo_productos << id_u_actual + 1 << ",";
         cout << "\nType the price for " << name << ": ";
         cin >> price; archivo_productos << price << ",";
         cout << "Type the cost for " << name << ": ";
         cin >> cost; archivo_productos << cost << ",";
         //Implementar un switch para el IVA
-        cout << name << " has IVA? (1. YES/ 0.NO): "; //implementar método que sea un switch para 1.yes, 2.no
+        cout << name << " has IVA? (1. YES/ 0.NO): "; //implementar mÈtodo que sea un switch para 1.yes, 2.no
         cin >> has_iva; archivo_productos << has_iva << ",";
         cout << "How many " << name << " are available right now? ";
         cin >> stock; archivo_productos << stock << ",";
@@ -486,6 +494,7 @@ void SistemaDeVentas::AgregarProducto() { //Crear excepciones por si aún no se 
     }
     archivo_productos.close();
 }
+
 
 void SistemaDeVentas::EditarProducto() { //crear confirmaciones de edit
     ifstream archivo_pr(rutaProductos.c_str());
