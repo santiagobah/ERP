@@ -95,6 +95,8 @@ private:
     void MenuInformesRH();
     void MenuInformesAlmacen();
     void InformeDeVentas();
+    void InformeDeVentasPorCliente();
+    void InformeDeVentasPorProducto();
     void InformeDeInventarios();
     void InformeProductosConMayorInventario();
     void InformeProductosConCeroInventario();
