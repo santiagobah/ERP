@@ -463,7 +463,7 @@ void SistemaDeVentas::AgregarProducto() { //Crear excepciones por si a˙n no se 
         int band_prod_rep = 0;
         for (int j = 0; j < productos.size(); j++) {
             if (upc == productos[j].get_UPC()) {
-                cout << "Este producto ya ha sido registrado anteriormente" << endl;
+                cout << "This product has been already registered before. " << endl;
                 band_prod_rep = 1;
                 break;
             }
@@ -1157,11 +1157,11 @@ void SistemaDeVentas::AgregarCliente() {
     int code_reg_fis;
     ofstream archivo_clientes(rutaClientes, ios::app);
     cout << "\nType the client¥s name: "; cin.ignore();getline(cin, name); archivo_clientes << name << ",";
-    cout << "Type the rfc of " << name << ": "; cin.ignore();getline(cin, rfc); archivo_clientes << rfc << ",";
-    cout << "Type the address of " << name << ": "; cin.ignore();getline(cin, address); archivo_clientes << address << ",";
-    cout << "Type the city where " << name << " lives: "; cin.ignore();getline(cin, city); archivo_clientes << city << ",";
-    cout << "Type the state where " << name << " lives: "; cin.ignore();getline(cin, state); archivo_clientes << state << ",";
-    cout << "Type the zipcode where " << address << " is located: "; cin.ignore();getline(cin, zipcode); archivo_clientes << zipcode << ",";
+    cout << "Type the rfc of " << name << ": "; getline(cin, rfc); archivo_clientes << rfc << ",";
+    cout << "Type the address of " << name << ": "; getline(cin, address); archivo_clientes << address << ",";
+    cout << "Type the city where " << name << " lives: "; getline(cin, city); archivo_clientes << city << ",";
+    cout << "Type the state where " << name << " lives: "; getline(cin, state); archivo_clientes << state << ",";
+    cout << "Type the zipcode where " << address << " is located: ";getline(cin, zipcode); archivo_clientes << zipcode << ",";
     cout << "The ID for the 'fiscal register' of " << name << " is: " << actual_id_cliente + 1; archivo_clientes << actual_id_cliente + 1 << ",";
     ofstream archivo_regimenes(rutaRegimenesFiscales, ios::app);
     archivo_regimenes << actual_id_cliente + 1 << ",";
