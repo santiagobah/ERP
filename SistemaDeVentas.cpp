@@ -22,37 +22,37 @@ SistemaDeVentas::~SistemaDeVentas()
 
 void SistemaDeVentas::MenuInicial()
 {
-    // Limpia la pantalla antes de mostrar el men˙
+    // Limpia la pantalla antes de mostrar el men√∫
     LimpiarPantalla();
-    // Variable para almacenar la opciÛn seleccionada por el usuario
+    // Variable para almacenar la opci√≥n seleccionada por el usuario
     int opcionMI = 0;
     // Bucle que se ejecuta hasta que el usuario elige salir del juego
     while (opcionMI != 2) {
-        // Muestra las opciones del men˙ y solicita la entrada del usuario
+        // Muestra las opciones del men√∫ y solicita la entrada del usuario
         cout << "Start menu: " << endl
 			<< "1. Log in" << endl
 			<< "2. Exit the System" << endl
 			<< "Option: ";
         cin >> opcionMI;
-        // Realiza acciones basadas en la opciÛn seleccionada por el usuario
+        // Realiza acciones basadas en la opci√≥n seleccionada por el usuario
         switch (opcionMI)
         {
         case 1:
-            // Llama al mÈtodo MenuPrincipal() para mostrar el men˙ principal del Sistema
+            // Llama al m√©todo MenuPrincipal() para mostrar el men√∫ principal del Sistema
             IniciarSesion();
             break;
         case 2:
             LimpiarPantalla();
             break;
         default:
-            // En caso de que el usuario seleccione una opciÛn no v·lida, muestra un mensaje de error
+            // En caso de que el usuario seleccione una opci√≥n no v√°lida, muestra un mensaje de error
             // y espera a que el usuario presione Enter
             LimpiarPantalla();
             cout << "Select one of the valid options" << endl;
             PausaConEnter();
             break;
         }
-        // Limpia la pantalla antes de mostrar el men˙ nuevamente
+        // Limpia la pantalla antes de mostrar el men√∫ nuevamente
         LimpiarPantalla();
         delete usuarioActual;
         usuarioActual = nullptr;
@@ -194,13 +194,13 @@ void SistemaDeVentas::MenuPrincipal()
 
 void SistemaDeVentas::MenuAdministrador()
 {
-    // Variable para almacenar la opciÛn seleccionada por el usuario
+    // Variable para almacenar la opci√≥n seleccionada por el usuario
     int opcionMA = 0;
     // Bucle que se ejecuta hasta que el usuario elige salir del juego
     while (opcionMA != 6) {
-        // Limpia la pantalla antes de mostrar el men˙
+        // Limpia la pantalla antes de mostrar el men√∫
         LimpiarPantalla();
-        // Muestra las opciones del men˙ y solicita la entrada del usuario
+        // Muestra las opciones del men√∫ y solicita la entrada del usuario
         cout << "Administrator menu: " << endl
 			<< "1. User Management" << endl
 			<< "2. Customer Management" << endl
@@ -210,34 +210,34 @@ void SistemaDeVentas::MenuAdministrador()
 			<< "6. Exit" << endl
 			<< "Option: ";
         cin >> opcionMA;
-        // Realiza acciones basadas en la opciÛn seleccionada por el usuario
+        // Realiza acciones basadas en la opci√≥n seleccionada por el usuario
         switch (opcionMA)
         {
         case 1:
-            // Llama al mÈtodo GestionDeUsuarios
+            // Llama al m√©todo GestionDeUsuarios
             GestionDeUsuarios();
             break;
         case 2:
-            // Llama al mÈtodo GestionDeClientes
+            // Llama al m√©todo GestionDeClientes
             GestionDeClientes();
             break;
         case 3:
-            // Llama al mÈtodo GestionDeProductos
+            // Llama al m√©todo GestionDeProductos
             GestionDeProductos();
             break;
         case 4:
-            // Llama al mÈtodo GestionDeVentas
+            // Llama al m√©todo GestionDeVentas
             GestionDeVentas();
             break;
         case 5:
-            // Llama al mÈtodo GestionDeInformes
+            // Llama al m√©todo GestionDeInformes
             GestionDeInformes();
             break;
         case 6:
             LimpiarPantalla();
             break;
         default:
-            // En caso de que el usuario seleccione una opciÛn no v·lida, muestra un mensaje de error
+            // En caso de que el usuario seleccione una opci√≥n no v√°lida, muestra un mensaje de error
             // y espera a que el usuario presione Enter
             LimpiarPantalla();
             cout << "Select one of the valid options" << endl;
@@ -249,13 +249,13 @@ void SistemaDeVentas::MenuAdministrador()
 
 void SistemaDeVentas::MenuVendedor()
 {
-    // Variable para almacenar la opciÛn seleccionada por el usuario
+    // Variable para almacenar la opci√≥n seleccionada por el usuario
     int opcionMV = 0;
     // Bucle que se ejecuta hasta que el usuario elige salir del Sistema
     while (opcionMV != 4) {
-		// Limpia la pantalla antes de mostrar el men˙
+		// Limpia la pantalla antes de mostrar el men√∫
 		LimpiarPantalla();
-		// Muestra las opciones del men˙ y solicita la entrada del usuario
+		// Muestra las opciones del men√∫ y solicita la entrada del usuario
         cout << "Seller menu: " << endl
             << "1. Customer Management" << endl
             << "2. Sales Management" << endl
@@ -263,26 +263,26 @@ void SistemaDeVentas::MenuVendedor()
             << "4. Exit" << endl
             << "Option: ";
 		cin >> opcionMV;
-		// Realiza acciones basadas en la opciÛn seleccionada por el usuario
+		// Realiza acciones basadas en la opci√≥n seleccionada por el usuario
 		switch (opcionMV)
 		{
 		case 1:
-			// Llama al mÈtodo GestionDeClientes
+			// Llama al m√©todo GestionDeClientes
 			GestionDeClientes();
 			break;
 		case 2:
-			// Llama al mÈtodo GestiÛn de Ventas
+			// Llama al m√©todo Gesti√≥n de Ventas
 			GestionDeVentas();
 			break;
 		case 3:
-			// Llama al mÈtodo GestiÛn de Informes
+			// Llama al m√©todo Gesti√≥n de Informes
 			GestionDeInformes();
 			break;
 		case 4:
 			LimpiarPantalla();
 			break;
 		default:
-			// En caso de que el usuario seleccione una opciÛn no v·lida, muestra un mensaje de error
+			// En caso de que el usuario seleccione una opci√≥n no v√°lida, muestra un mensaje de error
 			// y espera a que el usuario presione Enter
 			LimpiarPantalla();
             cout << "Select one of the valid options" << endl;
@@ -294,39 +294,39 @@ void SistemaDeVentas::MenuVendedor()
 
 void SistemaDeVentas::MenuRH()
 {
-    // Variable para almacenar la opciÛn seleccionada por el usuario
+    // Variable para almacenar la opci√≥n seleccionada por el usuario
 	int opcionMRH = 0;
 	// Bucle que se ejecuta hasta que el usuario elige salir del Sistema
 	while (opcionMRH != 3) {
-		// Limpia la pantalla antes de mostrar el men˙
+		// Limpia la pantalla antes de mostrar el men√∫
 		LimpiarPantalla();
-		// Muestra las opciones del men˙ y solicita la entrada del usuario
+		// Muestra las opciones del men√∫ y solicita la entrada del usuario
         cout << "Human Resources menu: " << endl
 			<< "1. Customer Management" << endl
 			<< "2. Reports Management" << endl
 			<< "3. Exit" << endl
 			<< "Option: ";
 		cin >> opcionMRH;
-		// Realiza acciones basadas en la opciÛn seleccionada por el usuario
+		// Realiza acciones basadas en la opci√≥n seleccionada por el usuario
 		switch (opcionMRH)
 		{
 		case 1:
-			// Llama al mÈtodo GestionDeUsuarios
+			// Llama al m√©todo GestionDeUsuarios
 			GestionDeUsuarios();
 			break;
 		case 2:
-			// Llama al mÈtodo GestionDeClientes
+			// Llama al m√©todo GestionDeClientes
 			GestionDeClientes();
 			break;
 		case 3:
-			// Llama al mÈtodo GestionDeInformes
+			// Llama al m√©todo GestionDeInformes
 			GestionDeInformes();
 			break;
 		case 4:
 			LimpiarPantalla();
 			break;
 		default:
-			// En caso de que el usuario seleccione una opciÛn no v·lida, muestra un mensaje de error
+			// En caso de que el usuario seleccione una opci√≥n no v√°lida, muestra un mensaje de error
 			// y espera a que el usuario presione Enter
 			LimpiarPantalla();
 			cout << "Selecciona una de las opciones validas" << endl;
@@ -339,35 +339,35 @@ void SistemaDeVentas::MenuRH()
 
 void SistemaDeVentas::MenuAlmacen()
 {
-    // Variable para almacenar la opciÛn seleccionada por el usuario
+    // Variable para almacenar la opci√≥n seleccionada por el usuario
 	int opcionMAL = 0;
 	// Bucle que se ejecuta hasta que el usuario elige salir del Sistema
 	while (opcionMAL != 3) {
-		// Limpia la pantalla antes de mostrar el men˙
+		// Limpia la pantalla antes de mostrar el men√∫
 		LimpiarPantalla();
-		// Muestra las opciones del men˙ y solicita la entrada del usuario
+		// Muestra las opciones del men√∫ y solicita la entrada del usuario
         cout << "Warehouse menu: " << endl
             << "1. Product Management" << endl
             << "2. Reports Management" << endl
             << "3. Exit" << endl
             << "Option: ";
 		cin >> opcionMAL;
-		// Realiza acciones basadas en la opciÛn seleccionada por el usuario
+		// Realiza acciones basadas en la opci√≥n seleccionada por el usuario
 		switch (opcionMAL)
 		{
 		case 1:
-			// Llama al mÈtodo GestionDeProductos
+			// Llama al m√©todo GestionDeProductos
 			GestionDeProductos();
 			break;
 		case 2:
-			// Llama al mÈtodo GestionDeInformes
+			// Llama al m√©todo GestionDeInformes
 			GestionDeInformes();
 			break;
 		case 3:
 			LimpiarPantalla();
 			break;
 		default:
-			// En caso de que el usuario seleccione una opciÛn no v·lida, muestra un mensaje de error
+			// En caso de que el usuario seleccione una opci√≥n no v√°lida, muestra un mensaje de error
 			// y espera a que el usuario presione Enter
 			LimpiarPantalla();
             cout << "Select one of the valid options" << endl;
@@ -430,7 +430,7 @@ void SistemaDeVentas::GestionDeProductos() {
     } while (opc_men_pod != 5);
 }
 
-void SistemaDeVentas::AgregarProducto() { //Crear excepciones por si a˙n no se crea el archivo de productos
+void SistemaDeVentas::AgregarProducto() { //Crear excepciones por si a√∫n no se crea el archivo de productos
     //Hacer que ID vaya creciendo
     //Hacer que ID vaya creciendo
     int id_u_actual; //Para hacer ID's consecutivos
@@ -442,7 +442,7 @@ void SistemaDeVentas::AgregarProducto() { //Crear excepciones por si a˙n no se c
         id_p_actual = 0;
     }
     else {
-        productos = SistemaDeVentas::leer_productos(); //Para que inicie el vector ya cargado con los productos que estÈn ya registrados
+        productos = SistemaDeVentas::leer_productos(); //Para que inicie el vector ya cargado con los productos que est√©n ya registrados
         int cant_prod_reg = productos.size();
         id_u_actual = productos[cant_prod_reg - 1].get_id();
         id_p_actual = presentaciones[cant_prod_reg - 1].getID();
@@ -471,7 +471,7 @@ void SistemaDeVentas::AgregarProducto() { //Crear excepciones por si a˙n no se c
         cout << "Type the cost for " << name << ": ";
         cin >> cost; archivo_productos << cost << ",";
         //Implementar un switch para el IVA
-        cout << name << " has IVA? (1. YES/ 0.NO): "; //implementar mÈtodo que sea un switch para 1.yes, 2.no
+        cout << name << " has IVA? (1. YES/ 0.NO): "; //implementar m√©todo que sea un switch para 1.yes, 2.no
         cin >> has_iva; archivo_productos << has_iva << ",";
         cout << "How many " << name << " are available right now? ";
         cin >> stock; archivo_productos << stock << ",";
@@ -841,19 +841,19 @@ vector<Presentacion> SistemaDeVentas::leer_presentaciones()
 
 void SistemaDeVentas::GestionDeUsuarios()
 {
-    // Variable para almacenar la opciÛn seleccionada por el usuario
+    // Variable para almacenar la opci√≥n seleccionada por el usuario
     int opcionGU = 0;
     do {
-        // Limpia la pantalla antes de mostrar el men˙
+        // Limpia la pantalla antes de mostrar el men√∫
         LimpiarPantalla();
         cout << "Welcome to the Users menu" << endl;
-        // Muestra las opciones del men˙ y solicita la entrada del usuario
+        // Muestra las opciones del men√∫ y solicita la entrada del usuario
         cout <<
             "1. Add Users" <<
             "\n2. Edit Users" <<
             "\n3. Delete Users" <<
             "\n4. Return" <<
-            "\nOpciÛn elegida: ";
+            "\nOpci√≥n elegida: ";
         cin >> opcionGU;
         switch (opcionGU) {
         case 1:
@@ -1147,7 +1147,7 @@ void SistemaDeVentas::AgregarCliente() { //Corregir con cin.ignore()
     string name, rfc, address, city, state, zipcode, name_reg_fis;
     int code_reg_fis;
     ofstream archivo_clientes(rutaClientes, ios::app);
-    cout << "\nType the client¥s name: "; cin >> name; archivo_clientes << name << ",";
+    cout << "\nType the client¬¥s name: "; cin >> name; archivo_clientes << name << ",";
     cout << "Type the rfc of " << name << ": "; cin >> rfc; archivo_clientes << rfc << ",";
     cout << "Type the address of " << name << ": "; cin >> address; archivo_clientes << address << ",";
     cout << "Type the city where " << name << " lives: "; cin >> city; archivo_clientes << city << ",";
@@ -1167,7 +1167,7 @@ void SistemaDeVentas::AgregarCliente() { //Corregir con cin.ignore()
 void SistemaDeVentas::EditarCliente() {
     ifstream archivo_cl(rutaClientes.c_str());
     if (!archivo_cl) {
-        cout << "There aren¥t any registered clients" << endl;
+        cout << "There aren¬¥t any registered clients" << endl;
         GestionDeClientes();
     }
     else {
@@ -1239,7 +1239,7 @@ void SistemaDeVentas::EditarCliente() {
 void SistemaDeVentas::VerClientes() {
     ifstream archivo_cl(rutaClientes.c_str());
     if (!archivo_cl) {
-        cout << "There aren¥t any registered clients" << endl;
+        cout << "There aren¬¥t any registered clients" << endl;
         GestionDeClientes();
     }
     else {
@@ -1301,7 +1301,7 @@ void SistemaDeVentas::VerClientes() {
 void SistemaDeVentas::EliminarCliente() {
     ifstream archivo_cl(rutaClientes.c_str());
     if (!archivo_cl) {
-        cout << "There aren¥t any registered clients" << endl;
+        cout << "There aren¬¥t any registered clients" << endl;
         GestionDeClientes();
     }
     else {
@@ -1471,7 +1471,7 @@ void SistemaDeVentas::AgregarVenta()
     for (int i = 0; i < clientes.size(); i++) {
         cout << i + 1 << ".- " << clientes[i].getName() << ". ID: " << clientes[i].getID() << endl;
     }
-    cout << "Opción: "; cin >> cliente_actual;
+    cout << "Opci¬ón: "; cin >> cliente_actual;
     productos = leer_productos();
     presentaciones = leer_presentaciones();
     //Siempre hay que leer los productos y presentaciones porque sino marca error
@@ -1502,7 +1502,7 @@ void SistemaDeVentas::AgregarVenta()
         getline(cin, upc_producto_vendido);
         for (int i = 0; i < productos.size(); i++) {
             if (upc_producto_vendido == productos[i].get_UPC()) {
-                unidades_producto_vendido++;//El cliente lleva al menos un artículo del encontrado
+                unidades_producto_vendido++;//El cliente lleva al menos un art¬ículo del encontrado
                 for (int j = 0; j < presentaciones.size(); j++) {
                     if (productos[i].get_id_presentation() == presentaciones[j].getID()) {
                         cout << presentaciones[j].getName() << " --- $" << productos[i].get_price() << "\n" << endl;
@@ -1529,7 +1529,7 @@ void SistemaDeVentas::AgregarVenta()
                         nuevoProductoVendido.setSalePricePerUnit(precio_unidad);
                         compras_actuales.push_back(nuevoProductoVendido);
                         if (band_dup == 0) {
-                            productosVendidos.push_back(nuevoProductoVendido);//Vector auxiliar para ver si ya se había llevado ese producto en la misma compra/venta
+                            productosVendidos.push_back(nuevoProductoVendido);//Vector auxiliar para ver si ya se hab¬ía llevado ese producto en la misma compra/venta
                         }
 
                         for (int ii = 0; ii < compras_actuales.size(); ii++) {
@@ -1874,6 +1874,83 @@ void SistemaDeVentas::MenuInformesAlmacen()
 
 void SistemaDeVentas::InformeDeVentas()
 {
+int opc_inf = 0;
+while (opc_inf != 3) {
+	LimpiarPantalla();
+	cout << "Welcome to the Sales Reports menu" << endl;
+	cout << "Select the type of sales you want to see: " << endl
+		<< "1. Sales by client" << endl
+		<< "2. Sales by product" << endl
+		<< "3. Return" << endl
+		<< "Option chosen: ";
+	cin >> opc_inf;
+	switch (opc_inf)
+	{
+	case 1:
+	{
+        InformeDeVentasPorCliente();
+		break;
+	}
+	case 2:
+	{
+        InformeDeVentasPorProducto();
+		break;
+	}
+	case 3:
+	{
+		break;
+	}
+	default:
+	{
+		LimpiarPantalla();
+		cout << "Select one of the valid options" << endl;
+		PausaConEnter();
+		break;
+	}
+	}
+}
+}
+
+void SistemaDeVentas::InformeDeVentasPorCliente()
+{
+    clientes = leer_clientes();
+	ventas_vector = LeerVentas();
+    int opp_inf;
+    cout << "Select the client you want to see the sales: " << endl;
+    for (int i = 0; i < clientes.size(); i++) {
+		cout << i + 1 << ".- " << clientes[i].getName() << ". ID: " << clientes[i].getID() << endl;
+	}
+    cout << "Option: "; cin >> opp_inf;
+	int id_client = clientes[opp_inf - 1].getID();
+	for (int i = 0; i < ventas_vector.size(); i++) {
+		if (id_client == ventas_vector[i].getClientID()) {
+			cout << "Sale for " << ventas_vector[i].getTotal() << " on " << ventas_vector[i].getDateOfSale().year << "/" << ventas_vector[i].getDateOfSale().month << "/" << ventas_vector[i].getDateOfSale().day << endl;
+		}
+	}
+	PausaConEnter();
+}
+
+void SistemaDeVentas::InformeDeVentasPorProducto()
+{
+    productos = leer_productos();
+	ventas_vector = LeerVentas();
+    productosVendidos = LeerProductosVendidos();
+	int opc_inf;
+	cout << "Select the product you want to see the sales: " << endl;
+	for (int i = 0; i < productos.size(); i++) {
+		cout << i + 1 << ".- " << productos[i].get_name() << ". UPC: " << productos[i].get_UPC() << endl;
+	}
+	cout << "Option: "; cin >> opc_inf;
+	int id_product = productos[opc_inf - 1].get_id();
+	for (int i = 0; i < ventas_vector.size(); i++) {
+		for (int j = 0; j < productosVendidos.size(); j++) {
+			if (id_product == productosVendidos[j].getID_Product()) {
+				cout << "Sale for " << productosVendidos[j].getQuantity() << " of " << productos[opc_inf - 1].get_name() << " on " << ventas_vector[i].getDateOfSale().year << "/" << ventas_vector[i].getDateOfSale().month << "/" << ventas_vector[i].getDateOfSale().day << endl;
+
+			}
+		}
+	}
+	PausaConEnter();
 
 }
 
