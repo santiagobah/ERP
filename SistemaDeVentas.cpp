@@ -1132,7 +1132,7 @@ void SistemaDeVentas::GestionDeClientes() {
     } while (opc_cli != 5);
 }
 
-void SistemaDeVentas::AgregarCliente() { //Corregir con cin.ignore()
+void SistemaDeVentas::AgregarCliente() {
     int actual_id_cliente;
     ifstream archivo_cl(rutaClientes.c_str());
     if (!archivo_cl) {
@@ -1147,19 +1147,19 @@ void SistemaDeVentas::AgregarCliente() { //Corregir con cin.ignore()
     string name, rfc, address, city, state, zipcode, name_reg_fis;
     int code_reg_fis;
     ofstream archivo_clientes(rutaClientes, ios::app);
-    cout << "\nType the client´s name: "; cin >> name; archivo_clientes << name << ",";
-    cout << "Type the rfc of " << name << ": "; cin >> rfc; archivo_clientes << rfc << ",";
-    cout << "Type the address of " << name << ": "; cin >> address; archivo_clientes << address << ",";
-    cout << "Type the city where " << name << " lives: "; cin >> city; archivo_clientes << city << ",";
-    cout << "Type the state where " << name << " lives: "; cin >> state; archivo_clientes << state << ",";
-    cout << "Type the zipcode where " << address << " is located: "; cin >> zipcode; archivo_clientes << zipcode << ",";
+    cout << "\nType the client¥s name: "; cin.ignore();getline(cin, name); archivo_clientes << name << ",";
+    cout << "Type the rfc of " << name << ": "; cin.ignore();getline(cin, rfc); archivo_clientes << rfc << ",";
+    cout << "Type the address of " << name << ": "; cin.ignore();getline(cin, address); archivo_clientes << address << ",";
+    cout << "Type the city where " << name << " lives: "; cin.ignore();getline(cin, city); archivo_clientes << city << ",";
+    cout << "Type the state where " << name << " lives: "; cin.ignore();getline(cin, state); archivo_clientes << state << ",";
+    cout << "Type the zipcode where " << address << " is located: "; cin.ignore();getline(cin, zipcode); archivo_clientes << zipcode << ",";
     cout << "The ID for the 'fiscal register' of " << name << " is: " << actual_id_cliente + 1; archivo_clientes << actual_id_cliente + 1 << ",";
     ofstream archivo_regimenes(rutaRegimenesFiscales, ios::app);
     archivo_regimenes << actual_id_cliente + 1 << ",";
     cout << "\nType the code of the fiscal register of " << name << ": "; cin >> code_reg_fis; archivo_regimenes << code_reg_fis << ",";
     cout << "Type the name of the fiscal register of " << name << ": "; cin.ignore(); getline(cin, name_reg_fis); archivo_regimenes << name_reg_fis << endl;
     cout << "The assigned id for " << name << " is " << actual_id_cliente + 1; archivo_clientes << actual_id_cliente + 1 << endl;
-    Clientes nuevoCliente = Clientes(actual_id_cliente, name, rfc, actual_id_cliente, address, city, state, zipcode, actual_id_cliente, code_reg_fis, name_reg_fis);
+    Clientes nuevoCliente = Clientes(actual_id_cliente, name, rfc, actual_id_cliente, address, city, state, zipcode, actual_id_cliente, code_reg_fis, name_reg_fis );
     clientes.push_back(nuevoCliente);
     archivo_clientes.close();
 }
