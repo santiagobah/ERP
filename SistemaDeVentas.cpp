@@ -1629,11 +1629,13 @@ void SistemaDeVentas::VerVentas()
         }
         break;
     }
-    case 4:
-    {
-        cout << "Sales by seller" << endl;
-        break;
-    }
+        case 4:
+        {
+            for (int i = 0; i < ventas_vector.size(); i++) {
+                cout << i+1 << ".- Sale by seller wit the ID " << ventas_vector[i].getUserID() << " for " << ventas_vector[i].getTotal() << endl;
+            }
+            break;
+        }
     }
 }
 
