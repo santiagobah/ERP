@@ -1454,7 +1454,7 @@ void SistemaDeVentas::GestionDeVentas()
 		case 2:
 		{
             RegistroDeActividad("View Sales");
-			VerVentas();
+			();
 			break;
 		}
 		case 3:
@@ -1591,25 +1591,55 @@ void SistemaDeVentas::VerVentas()
         }
         break;
     }
-    case 2:
-    {
-        vector <Ventas> aux_ventas;
-        aux_ventas = ventas_vector;
-        for (int i = 0; i < ventas_vector.size(); i++) {
-            for (int j = 0; j < ventas_vector.size() - 1; j++) {
-                if (ventas_vector[j].getDateOfSale().day > ventas_vector[j + 1].getDateOfSale().day) {
-                    aux_ventas[j] = ventas_vector[j];
-                    ventas_vector[j] = ventas_vector[j + 1];
-                    ventas_vector[j + 1] = aux_ventas[j];
+        case 2:
+        {
+            for (int i = 0; i < ventas_vector.size(); i++) {
+                for (int j = 0; j < ventas_vector.size() - 1; j++) {
+                    const DateTime &dateA = ventas_vector[j].getDateOfSale();
+                    const DateTime &dateB = ventas_vector[j + 1].getDateOfSale();
+                    bool swapNeeded = false;
+
+                    if (dateA.year > dateB.year) {
+                        swapNeeded = true;
+                    } else if (dateA.year == dateB.year) {
+                        if (dateA.month > dateB.month) {
+                            swapNeeded = true;
+                        } else if (dateA.month == dateB.month) {
+                            if (dateA.day > dateB.day) {
+                                swapNeeded = true;
+                            } else if (dateA.day == dateB.day) {
+                                if (dateA.hour > dateB.hour) {
+                                    swapNeeded = true;
+                                } else if (dateA.hour == dateB.hour) {
+                                    if (dateA.minute > dateB.minute) {
+                                        swapNeeded = true;
+                                    } else if (dateA.minute == dateB.minute) {
+                                        if (dateA.second > dateB.second) {
+                                            swapNeeded = true;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    if (swapNeeded) {
+                        // Manually swap elements
+                        Ventas temp = ventas_vector[j];
+                        ventas_vector[j] = ventas_vector[j + 1];
+                        ventas_vector[j + 1] = temp;
+                    }
                 }
             }
-        }
-        for (int i = 0; i < ventas_vector.size(); i++) {
-            cout << "Venta " << i + 1 << " para " << ventas_vector[i].getClientID() << " en " << ventas_vector[i].getDateOfSale().day << endl;
-        }
+            for (int i = 0; i < ventas_vector.size(); i++) {
+                const DateTime &date = ventas_vector[i].getDateOfSale();
+                cout << "Sale " << i + 1 << " for the client with the ID " << ventas_vector[i].getClientID()
+                     << " on " << date.year << "/" << date.month << "/" << date.day
+                     << " at " << date.hour << ":" << date.minute << ":" << date.second << endl;
+            }
 
-        break;
-    }
+            break;
+        }
     case 3:
     {
         int opc_cliente;
