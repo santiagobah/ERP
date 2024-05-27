@@ -1454,6 +1454,7 @@ void SistemaDeVentas::GestionDeVentas()
 		case 2:
 		{
             RegistroDeActividad("View Sales");
+			VerVentas();
 			break;
 		}
 		case 3:
