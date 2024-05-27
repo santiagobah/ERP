@@ -1624,7 +1624,7 @@ void SistemaDeVentas::VerVentas()
                     }
 
                     if (swapNeeded) {
-                        // Manually swap elements
+        
                         Ventas temp = ventas_vector[j];
                         ventas_vector[j] = ventas_vector[j + 1];
                         ventas_vector[j + 1] = temp;
